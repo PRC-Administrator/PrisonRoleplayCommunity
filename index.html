@@ -182,6 +182,37 @@ h2 {
     margin-bottom:25px;
     color:#ffffff;
 }
+/* Neue Update Animation */
+.news-item {
+    animation: fadeIn 0.6s ease;
+    transition: 0.3s;
+}
+
+.news-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px #ff00ff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Wichtig Badge Animation */
+.important-badge {
+    background: red;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 5px red; }
+    50% { box-shadow: 0 0 20px red; }
+    100% { box-shadow: 0 0 5px red; }
+}
 
 </style>
 </head>
@@ -307,14 +338,18 @@ function createNewsElement(text, date) {
     container.prepend(news);
 }
 
-function activateAdminAnimation() {
-    const overlay = document.getElementById("adminOverlay");
-    overlay.style.opacity = "1";
-    setTimeout(() => {
-        overlay.style.opacity = "0";
-    }, 2000);
+function timeAgo(dateString){
+    const diff = Date.now() - new Date(dateString).getTime();
+    const minutes = Math.floor(diff / 60000);
+
+    if(minutes < 1) return "Gerade eben";
+    if(minutes < 60) return "Vor " + minutes + " Minuten";
+
+    const hours = Math.floor(minutes / 60);
+    return "Vor " + hours + " Stunden";
 }
-    function loadUpdates(){
+
+function loadUpdates(){
     const container = document.getElementById("newsContainer");
     let updates = JSON.parse(localStorage.getItem("updates")) || [];
 
@@ -323,13 +358,15 @@ function activateAdminAnimation() {
     updates.forEach(u=>{
         container.innerHTML += `
             <div class="news-item">
+                ${u.important ? '<span class="important-badge">📌 WICHTIG</span><br>' : ""}
                 <strong>${u.title}</strong><br>
-                <small>${u.date}</small><br>
-                ${u.text}
+                <small>${timeAgo(u.date)}</small>
+                <p>${u.text}</p>
             </div>
         `;
     });
 }
+
 
 window.addEventListener("load", loadUpdates);
 
@@ -337,6 +374,7 @@ window.addEventListener("load", loadUpdates);
     
 </body>
 </html>
+
 
 
 

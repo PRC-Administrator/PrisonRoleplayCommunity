@@ -265,10 +265,9 @@ function addUpdate(){
     document.getElementById("importantUpdate").checked=false;
 
     log("Neues Update veröffentlicht");
-    
+    sendToDiscord(title, text, important);
     loadAdminUpdates();
 }
-sendToDiscord(title, text, important);
 
 function loadAdminUpdates(){
 

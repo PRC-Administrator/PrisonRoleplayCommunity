@@ -232,6 +232,7 @@ h2 {
     <div id="newsContainer"></div>
 </div>
 
+
 <script>
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 let adminUnlocked = false;
@@ -309,10 +310,30 @@ function activateAdminAnimation() {
         overlay.style.opacity = "0";
     }, 2000);
 }
+    function loadUpdates(){
+    const container = document.getElementById("newsContainer");
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+
+    container.innerHTML="";
+
+    updates.forEach(u=>{
+        container.innerHTML += `
+            <div class="news-item">
+                <strong>${u.title}</strong><br>
+                <small>${u.date}</small><br>
+                ${u.text}
+            </div>
+        `;
+    });
+}
+
+window.addEventListener("load", loadUpdates);
+
 </script>
     
 </body>
 </html>
+
 
 
 

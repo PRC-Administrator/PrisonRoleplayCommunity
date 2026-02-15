@@ -92,11 +92,9 @@ nav a{
 
 <script>
 window.addEventListener("load", function(){
-
     if(localStorage.getItem("maintenanceMode")==="on"){
         startMaintenance();
     }
-
 });
 
 function startMaintenance(){
@@ -104,13 +102,18 @@ function startMaintenance(){
     document.getElementById("maintenanceBanner").style.display="block";
     document.getElementById("maintenanceOverlay").style.display="flex";
 
-    document.querySelectorAll("a").forEach(el=>{
+    document.querySelectorAll("a, button").forEach(el=>{
         el.style.pointerEvents="none";
         el.style.opacity="0.5";
     });
 
     let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60 * 1000;
     let startTime = parseInt(localStorage.getItem("maintenanceStart"));
+
+    if(!duration || !startTime){
+        return;
+    }
+
     const endTime = startTime + duration;
 
     function updateCountdown(){
@@ -138,6 +141,8 @@ function startMaintenance(){
 
 </body>
 </html>
+
+
 
 
 

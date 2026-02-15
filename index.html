@@ -151,6 +151,30 @@ h2 {
     z-index: 99999;
     display: none;
 }
+
+/* DUNKLES OVERLAY */
+#maintenanceOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 99998;
+    color: white;
+    font-size: 40px;
+}
+
+#countdown {
+    font-size: 30px;
+    margin-top: 20px;
+    color: red;
+    text-shadow: 0 0 20px red;
+}
 </style>
 </head>
 
@@ -158,6 +182,11 @@ h2 {
 
 <div id="maintenanceBanner">
     🚧 IN WARTUNG 🚧
+</div>
+
+<div id="maintenanceOverlay">
+    🚧 WEBSITE IN WARTUNG 🚧
+    <div id="countdown"></div>
 </div>
 
 <div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
@@ -188,22 +217,53 @@ h2 {
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 let adminUnlocked = false;
 
-/* Wartungsbanner anzeigen */
 window.addEventListener("load", function(){
-    if(localStorage.getItem("maintenanceMode")==="on"){
-        document.getElementById("maintenanceBanner").style.display="block";
-    }
 
     const savedNews = JSON.parse(localStorage.getItem("prcNews")) || [];
     savedNews.forEach(news => createNewsElement(news.text, news.date));
+
+    if(localStorage.getItem("maintenanceMode")==="on"){
+
+        document.getElementById("maintenanceBanner").style.display="block";
+        document.getElementById("maintenanceOverlay").style.display="flex";
+
+        document.querySelectorAll("button, a").forEach(el=>{
+            el.style.pointerEvents="none";
+            el.style.opacity="0.5";
+        });
+
+        const duration = 30 * 60 * 1000;
+        const startTime = localStorage.getItem("maintenanceStart") || Date.now();
+        localStorage.setItem("maintenanceStart", startTime);
+        const endTime = parseInt(startTime) + duration;
+
+        function updateCountdown(){
+            const now = Date.now();
+            const remaining = endTime - now;
+
+            if(remaining <= 0){
+                document.getElementById("countdown").innerText = "Wartung beendet";
+                return;
+            }
+
+            const minutes = Math.floor((remaining / 1000 / 60) % 60);
+            const seconds = Math.floor((remaining / 1000) % 60);
+
+            document.getElementById("countdown").innerText =
+                "Verbleibend: " + minutes + "m " + seconds + "s";
+
+            requestAnimationFrame(updateCountdown);
+        }
+
+        updateCountdown();
+    }
 });
 
-/* Admin Shortcut */
+/* ADMIN SHORTCUT */
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.shiftKey && event.altKey && event.code === "KeyA") {
         const pass = prompt("Admin Passwort eingeben:");
         if (pass === ADMIN_PASSWORD) {
-            adminUnlocked = true;
             activateAdminAnimation();
             alert("Admin Modus aktiviert 🔓");
         } else {
@@ -234,6 +294,8 @@ function activateAdminAnimation() {
 
 </body>
 </html>
+
+
 
 
 

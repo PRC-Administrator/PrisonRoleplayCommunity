@@ -10,7 +10,12 @@ if(localStorage.getItem("maintenanceMode")==="on"){
     <meta charset="UTF-8">
     <title>Prison Roleplay Community</title>
     <style>
-        body {
+        body
+        <div id="maintenanceBanner">
+    🚧 IN WARTUNG 🚧
+</div>
+
+        {
     margin: 0;
     font-family: Arial, sans-serif;
     color: white;
@@ -200,6 +205,28 @@ nav a:hover {
     50% { box-shadow: 0 0 60px #00ff00; }
     100% { box-shadow: 0 0 0px #00ff00; }
 }
+#maintenanceBanner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, red, darkred);
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 20px;
+    z-index: 99999;
+    display: none;
+    text-shadow: 0 0 20px red;
+    box-shadow: 0 0 40px red;
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}
 
     </style>
 </head>
@@ -294,6 +321,13 @@ function saveNews(newsData) {
 }
 
 </script>
+<script>
+window.addEventListener("load", function(){
+    if(localStorage.getItem("maintenanceMode")==="on"){
+        document.getElementById("maintenanceBanner").style.display="block";
+    }
+});
+</script>
 
 <body>
     <div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
@@ -350,6 +384,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

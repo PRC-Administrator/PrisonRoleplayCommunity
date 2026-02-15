@@ -214,6 +214,29 @@ function checkMaintenance(){
 }
 
 /* ================= UPDATES ================= */
+function sendToDiscord(title, text, important){
+
+    const webhookURL = "https://discord.com/api/webhooks/1472649740779782377/GYcpOVQxmkV5rzBC2p9ykv7iUq4gZs_NvTgMbGpyzaxDlFa6IDLmu-fgj-i9iwiwGo-G";
+
+    let message = "";
+
+    if(important){
+        message += "📌 **WICHTIGES UPDATE** 📌\n\n";
+    }
+
+    message += "**" + title + "**\n";
+    message += text;
+
+    fetch(webhookURL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            content: message
+        })
+    });
+}
 
 function addUpdate(){
 
@@ -242,8 +265,10 @@ function addUpdate(){
     document.getElementById("importantUpdate").checked=false;
 
     log("Neues Update veröffentlicht");
+    
     loadAdminUpdates();
 }
+sendToDiscord(title, text, important);
 
 function loadAdminUpdates(){
 

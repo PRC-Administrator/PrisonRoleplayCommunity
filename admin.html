@@ -114,35 +114,23 @@ button:hover{
 
     <input type="text" id="updateTitle" placeholder="Titel">
     <br>
-    <textarea id="updateText" placeholder="Update Text" 
+
+    <textarea id="updateText" placeholder="Update Text"
         style="width:70%;height:100px;background:#1a1a1a;color:#00ff88;border:none;border-radius:8px;padding:10px;"></textarea>
     <br>
+
+    <label style="color:#00ff88;">
+        <input type="checkbox" id="importantUpdate">
+        📌 Als WICHTIG markieren
+    </label>
+    <br>
+
     <button onclick="addUpdate()">Update posten</button>
 
     <div id="updateList" style="margin-top:20px;"></div>
 </div>
 
-            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
-                <strong>${u.title}</strong><br>
-                <small>${u.date}</small><br>
-                ${u.text}
-                <br>
-                <button onclick="deleteUpdate(${index})"
-                    style="background:red;color:white;margin-top:5px;">
-                    Löschen
-                </button>
-            </div>
 
-            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
-                <strong>${u.title}</strong><br>
-                <small>${u.date}</small><br>
-                ${u.text}
-                <br>
-                <button onclick="deleteUpdate(${index})"
-                    style="background:red;color:white;margin-top:5px;">
-                    Löschen
-                </button>
-            </div>
     <!-- Log -->
     <div class="section">
         <h2>📜 System Log</h2>
@@ -237,13 +225,10 @@ function checkMaintenance(){
         update();
     }
 }
-/* ======================
-   UPDATE SYSTEM
-====================== */
-
 function addUpdate(){
     const title = document.getElementById("updateTitle").value;
     const text = document.getElementById("updateText").value;
+    const important = document.getElementById("importantUpdate").checked;
 
     if(!title || !text){
         alert("Bitte Titel und Text eingeben.");
@@ -255,6 +240,7 @@ function addUpdate(){
     updates.unshift({
         title:title,
         text:text,
+        important:important,
         date:new Date().toLocaleString()
     });
 
@@ -262,38 +248,9 @@ function addUpdate(){
 
     document.getElementById("updateTitle").value="";
     document.getElementById("updateText").value="";
+    document.getElementById("importantUpdate").checked=false;
 
     log("Neues Update veröffentlicht");
-    loadAdminUpdates();
-}
-
-function loadAdminUpdates(){
-    const list = document.getElementById("updateList");
-    list.innerHTML="";
-
-    let updates = JSON.parse(localStorage.getItem("updates")) || [];
-
-    updates.forEach((u,index)=>{
-        list.innerHTML += `
-            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
-                <strong>${u.title}</strong><br>
-                <small>${u.date}</small><br>
-                ${u.text}
-                <br>
-                <button onclick="deleteUpdate(${index})"
-                    style="background:red;color:white;margin-top:5px;">
-                    Löschen
-                </button>
-            </div>
-        `;
-    });
-}
-
-function deleteUpdate(index){
-    let updates = JSON.parse(localStorage.getItem("updates")) || [];
-    updates.splice(index,1);
-    localStorage.setItem("updates", JSON.stringify(updates));
-    log("Update gelöscht");
     loadAdminUpdates();
 }
 

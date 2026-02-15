@@ -1,33 +1,17 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <script>
+<meta charset="UTF-8">
+<title>Prison Roleplay Community</title>
+
+<script>
 if(localStorage.getItem("maintenanceMode")==="on"){
     window.location.href="maintenance.html";
 }
 </script>
 
-    <meta charset="UTF-8">
-    <title>Prison Roleplay Community</title>
-    <style>
-        body
-        #maintenanceBanner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: red;
-    color: white;
-    text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-    padding: 15px;
-    z-index: 9999;
-    display: none;
-}
-
-
-        {
+<style>
+body {
     margin: 0;
     font-family: Arial, sans-serif;
     color: white;
@@ -38,93 +22,13 @@ if(localStorage.getItem("maintenanceMode")==="on"){
     animation: neonBackground 15s ease infinite;
 }
 
-
-        header {
-            padding: 40px;
-        }
-
-        h1 {
-            font-size: 50px;
-            color: #00ffff;
-            text-shadow: 0 0 20px #00ffff;
-        }
-
-        h2 {
-            color: #ff00ff;
-            text-shadow: 0 0 15px #ff00ff;
-        }
-
-        .box {
-            margin: 30px auto;
-            padding: 30px;
-            width: 80%;
-            max-width: 600px;
-            background: #111;
-            border: 2px solid #00ffff;
-            border-radius: 15px;
-            box-shadow: 0 0 20px #00ffff;
-        }
-
-        .btn {
-            display: inline-block;
-            margin: 15px;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .discord {
-            background: #5865F2;
-            box-shadow: 0 0 15px #5865F2;
-        }
-
-        .roblox {
-            background: #ff0000;
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        .btn:hover {
-            transform: scale(1.1);
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            background: #000;
-            font-size: 14px;
-            color: gray;
-        }
-        @keyframes neonBackground {
+@keyframes neonBackground {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
-/* Sirenen Overlay */
-.siren {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.08));
-    animation: sirenFlash 4s infinite alternate;
-}
 
-@keyframes sirenFlash {
-    0% {
-        background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.02));
-    }
-    50% {
-        background: linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,0,255,0.08));
-    }
-    100% {
-        background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.02));
-    }
-}
+/* NAVIGATION */
 nav {
     background: #000;
     padding: 15px;
@@ -139,14 +43,69 @@ nav a {
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
-    transition: 0.3s;
 }
 
 nav a:hover {
     color: #00ffff;
     text-shadow: 0 0 10px #00ffff;
 }
- .news-item {
+
+/* HEADER */
+header {
+    padding: 40px;
+}
+
+h1 {
+    font-size: 50px;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+}
+
+h2 {
+    color: #ff00ff;
+    text-shadow: 0 0 15px #ff00ff;
+}
+
+/* BOX */
+.box {
+    margin: 30px auto;
+    padding: 30px;
+    width: 80%;
+    max-width: 600px;
+    background: #111;
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-block;
+    margin: 15px;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.discord {
+    background: #5865F2;
+    box-shadow: 0 0 15px #5865F2;
+}
+
+.roblox {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+/* NEWS */
+.news-item {
     background: #1a1a1a;
     padding: 15px;
     margin: 15px 0;
@@ -160,33 +119,8 @@ nav a:hover {
     border-radius: 8px;
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 0 10px #ff00ff;
 }
 
-.admin-panel {
-    margin-bottom: 20px;
-}
-
-.admin-panel input {
-    padding: 10px;
-    width: 60%;
-    border-radius: 8px;
-    border: none;
-}
-
-.admin-panel button {
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: none;
-    background: #00ffff;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 0 10px #00ffff;
-}
-
-.admin-panel button:hover {
-    transform: scale(1.1);
-}
 /* ADMIN OVERLAY */
 #adminOverlay {
     position: fixed;
@@ -208,21 +142,13 @@ nav a:hover {
     z-index: 9999;
 }
 
-.admin-glow {
-    animation: adminGlow 2s ease;
-}
-
-@keyframes adminGlow {
-    0% { box-shadow: 0 0 0px #00ff00; }
-    50% { box-shadow: 0 0 60px #00ff00; }
-    100% { box-shadow: 0 0 0px #00ff00; }
-}
+/* WARTUNGS BANNER */
 #maintenanceBanner {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(90deg, red, darkred);
+    background: red;
     color: white;
     text-align: center;
     font-size: 40px;
@@ -230,175 +156,92 @@ nav a:hover {
     padding: 20px;
     z-index: 99999;
     display: none;
-    text-shadow: 0 0 20px red;
-    box-shadow: 0 0 40px red;
-    animation: pulse 1.5s infinite alternate;
 }
-
-@keyframes pulse {
-    from { opacity: 0.8; }
-    to { opacity: 1; }
-}
-
-    </style>
+</style>
 </head>
+
+<body>
+
+<div id="maintenanceBanner">
+    🚧 IN WARTUNG 🚧
+</div>
+
+<div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
+
+<nav>
+    <a href="index.html">Start</a>
+    <a href="team.html">Team</a>
+    <a href="regeln.html">Regeln</a>
+</nav>
+
+<header>
+    <h1>Prison Roleplay Community</h1>
+    <h2>Gefängnis-Rollenspiel: Fluchtplan</h2>
+</header>
+
+<div class="box">
+    <p>Willkommen in unserer Community!</p>
+    <a href="https://discord.gg/fj9tTA5gUp" target="_blank" class="btn discord">Discord beitreten</a>
+    <a href="https://www.roblox.com" target="_blank" class="btn roblox">Roblox Spiel starten</a>
+</div>
+
+<div class="box">
+    <h2>📰 News & Updates</h2>
+    <div id="newsContainer"></div>
+</div>
+
 <script>
-const ADMIN_PASSWORD = "PRC-Administrator2026"; // Dein Passwort
+const ADMIN_PASSWORD = "PRC-Administrator2026";
 let adminUnlocked = false;
 
-// Gespeicherte News laden
-window.onload = function() {
+/* Wartungsbanner anzeigen */
+window.addEventListener("load", function(){
+    if(localStorage.getItem("maintenanceMode")==="on"){
+        document.getElementById("maintenanceBanner").style.display="block";
+    }
+
     const savedNews = JSON.parse(localStorage.getItem("prcNews")) || [];
     savedNews.forEach(news => createNewsElement(news.text, news.date));
-};
+});
 
-// 🔐 STRG + Shift + ALT + A = Admin Login
-    document.addEventListener("keydown", function(event) {
+/* Admin Shortcut */
+document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.shiftKey && event.altKey && event.code === "KeyA") {
         const pass = prompt("Admin Passwort eingeben:");
         if (pass === ADMIN_PASSWORD) {
             adminUnlocked = true;
             activateAdminAnimation();
             alert("Admin Modus aktiviert 🔓");
-            showAdminControls();
         } else {
             alert("Falsches Passwort ❌");
         }
     }
 });
 
-function showAdminControls() {
-    const panel = document.createElement("div");
-    panel.innerHTML = `
-        <input type="text" id="newsInput" placeholder="Update eingeben...">
-        <button onclick="addNewsFromInput()">Posten</button>
-    `;
-    document.querySelector(".box").prepend(panel);
-}
-
-function addNewsFromInput() {
-    const input = document.getElementById("newsInput");
-    if (input.value.trim() !== "") {
-        const today = new Date().toLocaleDateString("de-DE");
-        const newsData = { text: input.value, date: today };
-
-        saveNews(newsData);
-        createNewsElement(newsData.text, newsData.date);
-
-        input.value = "";
-    }
-}
-
 function createNewsElement(text, date) {
     const container = document.getElementById("newsContainer");
-
     const news = document.createElement("div");
     news.className = "news-item";
-
     news.innerHTML = `
         <span class="badge">UPDATE</span>
         <p><strong>${date}</strong> – ${text}</p>
-        ${adminUnlocked ? '<button onclick="deleteNews(this)">🗑 Löschen</button>' : ''}
     `;
-
     container.prepend(news);
 }
 
-function deleteNews(button) {
-    const newsItem = button.parentElement;
-    const text = newsItem.querySelector("p").innerText;
-
-    let saved = JSON.parse(localStorage.getItem("prcNews")) || [];
-    saved = saved.filter(n => !text.includes(n.text));
-    localStorage.setItem("prcNews", JSON.stringify(saved));
-
-    newsItem.remove();
-}
-
-function saveNews(newsData) {
-    const existing = JSON.parse(localStorage.getItem("prcNews")) || [];
-    existing.unshift(newsData);
-    localStorage.setItem("prcNews", JSON.stringify(existing));
-}
-    function activateAdminAnimation() {
+function activateAdminAnimation() {
     const overlay = document.getElementById("adminOverlay");
-
     overlay.style.opacity = "1";
-    document.body.classList.add("admin-glow");
-
     setTimeout(() => {
         overlay.style.opacity = "0";
-        document.body.classList.remove("admin-glow");
     }, 2000);
 }
-
-<script>
-window.addEventListener("load", function(){
-    const banner = document.getElementById("maintenanceBanner");
-    if(localStorage.getItem("maintenanceMode")==="on"){
-        banner.style.display = "block";
-    } else {
-        banner.style.display = "none";
-    }
-});
 </script>
 
-
-<body>
-    <div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
-
-    <nav>
-    <a href="index.html">Start</a>
-    <a href="team.html">Team</a>
-    <a href="regeln.html">Regeln</a>
-</nav>
-
-                <div class="siren"></div>
+</body>
+</html>
 
 
-<header>
-    <h1>Prison Roleplay Community</h1>
-    <h2>Gefängnis-Rollenspiel: Fluchtplan</h2>
-    <p class="description">
-PRC ist ein inoffizieller Community-Server für das Roblox-Spiel Gefängnis-Rollenspiel: Fluchtplan von Nonstop Entertainment.
-</p>
-    <p class="description">
-Wir bieten realistisches Rollenspiel, ein aktives Team und Events. Unser Server unterstützt sowohl englisch- als auch deutschsprachige Spieler
-</p>
-<p class="description"> 
-Bei Fragen an prison.rp.community.staff@gmail.com wenden.
-</p>
-<p class="description"> 
-Oder an den Discord Support @officalprcsupport Weden.
-</p>
-    
-</header>
-
-<div class="box">
-    <p>Willkommen in unserer Community!</p>
-    <p>Erlebe spannende Gefängnis-Ausbrüche, Roleplay-Szenarien und werde Teil unseres Teams.</p>
-
-    <a href="https://discord.gg/fj9tTA5gUp" target="_blank" class="btn discord">Discord beitreten</a>
-    <a href="https://www.roblox.com/de/games/7663817366/Prison-Roleplay-Escape-Plan?privateServerLinkCode=11696943283488504404218780249072" target="_blank" class="btn roblox">Roblox Spiel starten</a>
-<a href="team.html" class="btn discord">Unsere Leitung </a>
-
-</div>
-    
-<div class="box">
-    <h2>📰 News & Updates</h2>
-
-    <div class="admin-panel" id="adminPanel" style="display:none;">
-        <input type="password" id="adminPassword" placeholder="Admin Passwort">
-        <button onclick="checkPassword()">Freischalten</button>
-
-        <div id="adminControls" style="display:none; margin-top:15px;">
-            <input type="text" id="newsInput" placeholder="Update eingeben...">
-            <button onclick="addNewsFromInput()">Posten</button>
-        </div>
-    </div>
-
-    <div id="newsContainer"></div>
-</div>
 
 
 

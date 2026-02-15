@@ -168,7 +168,9 @@ nav a:hover {
     </style>
 </head>
 <script>
-const ADMIN_PASSWORD = "PRC2026"; // Hier dein Passwort ändern
+const ADMIN_PASSWORD = "PRC-Director2026"; // Dein Passwort
+
+let adminUnlocked = false;
 
 // Beim Laden gespeicherte News anzeigen
 window.onload = function() {
@@ -176,18 +178,30 @@ window.onload = function() {
     savedNews.forEach(news => createNewsElement(news.text, news.date));
 };
 
-function showLogin() {
-    document.getElementById("adminPanel").style.display = "block";
-}
-
-function checkPassword() {
-    const entered = document.getElementById("adminPassword").value;
-    if (entered === ADMIN_PASSWORD) {
-        document.getElementById("adminControls").style.display = "block";
-        alert("Admin freigeschaltet ✅");
-    } else {
-        alert("Falsches Passwort ❌");
+// 😎 GEHEIMER ADMIN-KLICK (5x auf Titel klicken)
+let clickCount = 0;
+document.querySelector("h2").addEventListener("click", function() {
+    clickCount++;
+    if (clickCount === 5) {
+        const pass = prompt("Admin Passwort eingeben:");
+        if (pass === ADMIN_PASSWORD) {
+            adminUnlocked = true;
+            alert("Admin Modus aktiviert 🔓");
+            showAdminControls();
+        } else {
+            alert("Falsches Passwort ❌");
+        }
+        clickCount = 0;
     }
+});
+
+function showAdminControls() {
+    const panel = document.createElement("div");
+    panel.innerHTML = `
+        <input type="text" id="newsInput" placeholder="Update eingeben...">
+        <button onclick="addNewsFromInput()">Posten</button>
+    `;
+    document.querySelector(".box").prepend(panel);
 }
 
 function addNewsFromInput() {
@@ -208,12 +222,25 @@ function createNewsElement(text, date) {
 
     const news = document.createElement("div");
     news.className = "news-item";
+
     news.innerHTML = `
         <span class="badge">UPDATE</span>
         <p><strong>${date}</strong> – ${text}</p>
+        ${adminUnlocked ? '<button onclick="deleteNews(this)">🗑 Löschen</button>' : ''}
     `;
 
     container.prepend(news);
+}
+
+function deleteNews(button) {
+    const newsItem = button.parentElement;
+    const text = newsItem.querySelector("p").innerText;
+
+    let saved = JSON.parse(localStorage.getItem("prcNews")) || [];
+    saved = saved.filter(n => !text.includes(n.text));
+    localStorage.setItem("prcNews", JSON.stringify(saved));
+
+    newsItem.remove();
 }
 
 function saveNews(newsData) {
@@ -265,8 +292,6 @@ Oder an den Discord Support @officalprcsupport Weden.
 <div class="box">
     <h2>📰 News & Updates</h2>
 
-    <button onclick="showLogin()" id="adminLoginBtn">🔒 Admin Login</button>
-
     <div class="admin-panel" id="adminPanel" style="display:none;">
         <input type="password" id="adminPassword" placeholder="Admin Passwort">
         <button onclick="checkPassword()">Freischalten</button>
@@ -279,6 +304,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

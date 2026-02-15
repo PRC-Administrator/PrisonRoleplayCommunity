@@ -164,6 +164,36 @@ nav a:hover {
 .admin-panel button:hover {
     transform: scale(1.1);
 }
+/* ADMIN OVERLAY */
+#adminOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,255,0,0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 30px #00ff00;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+}
+
+.admin-glow {
+    animation: adminGlow 2s ease;
+}
+
+@keyframes adminGlow {
+    0% { box-shadow: 0 0 0px #00ff00; }
+    50% { box-shadow: 0 0 60px #00ff00; }
+    100% { box-shadow: 0 0 0px #00ff00; }
+}
 
     </style>
 </head>
@@ -183,6 +213,7 @@ window.onload = function() {
         const pass = prompt("Admin Passwort eingeben:");
         if (pass === ADMIN_PASSWORD) {
             adminUnlocked = true;
+            activateAdminAnimation();
             alert("Admin Modus aktiviert 🔓");
             showAdminControls();
         } else {
@@ -244,9 +275,23 @@ function saveNews(newsData) {
     existing.unshift(newsData);
     localStorage.setItem("prcNews", JSON.stringify(existing));
 }
+    function activateAdminAnimation() {
+    const overlay = document.getElementById("adminOverlay");
+
+    overlay.style.opacity = "1";
+    document.body.classList.add("admin-glow");
+
+    setTimeout(() => {
+        overlay.style.opacity = "0";
+        document.body.classList.remove("admin-glow");
+    }, 2000);
+}
+
 </script>
 
 <body>
+    <div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
+
     <nav>
     <a href="index.html">Start</a>
     <a href="team.html">Team</a>
@@ -299,6 +344,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

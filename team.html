@@ -1,110 +1,103 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Leitung | Prison Roleplay Community</title>
+<meta charset="UTF-8">
+<title>PRC Team</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
-            background-size: 600% 600%;
-            animation: neonBackground 15s ease infinite;
-            color: white;
-            text-align: center;
-        }
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#050a05,#0f1f0f);
+    color:#00ff88;
+    text-align:center;
+}
 
-        @keyframes neonBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+h1{
+    margin-top:60px;
+    text-shadow:0 0 20px #00ff88;
+}
 
-        h1 {
-            margin-top: 40px;
-            font-size: 40px;
-            color: #00ffff;
-            text-shadow: 0 0 20px #00ffff;
-        }
+.team-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:40px;
+    margin:60px 20px;
+}
 
-        .team-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            padding: 40px;
-        }
+.team-card{
+    width:260px;
+    padding:25px;
+    border-radius:20px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(12px);
+    border:2px solid #00ff88;
+    box-shadow:0 0 25px #00ff88;
+    transition:0.3s;
+}
 
-        .member {
-            background: #111;
-            border: 2px solid #ff00ff;
-            border-radius: 15px;
-            padding: 20px;
-            width: 250px;
-            box-shadow: 0 0 20px #ff00ff;
-            transition: 0.3s;
-        }
+.team-card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 45px #00ff88;
+}
 
-        .member:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px #00ffff;
-        }
+.team-card img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:15px;
+    border:3px solid #00ff88;
+}
 
-        .role {
-            color: #ff00ff;
-            font-weight: bold;
-        }
+.role{
+    font-weight:bold;
+    margin-top:5px;
+}
 
-        .back-btn {
-            display: inline-block;
-            margin: 20px;
-            padding: 10px 20px;
-            background: #00ffff;
-            color: black;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .back-btn:hover {
-            box-shadow: 0 0 15px #00ffff;
-        }
-
-    </style>
-
+.owner{ color:#ff3b3b; }
+.admin{ color:#00bfff; }
+.moderator{ color:#ffcc00; }
+</style>
 </head>
 <body>
 
-<h1>👮 Unsere Leitung</h1>
+<h1>👥 PRC Team</h1>
 
-<div class="team-container">
+<div class="team-container" id="teamContainer"></div>
 
-    <div class="member">
-        <h2>Justin</h2>
-        <p class="role">Haupt-Owner</p>
-        <p>Leitet die Community und das Projekt.</p>
-    </div>
+<script>
+async function loadTeam(){
+    try{
+        const response = await fetch("team.json");
+        const team = await response.json();
 
-    <div class="member">
-        <h2>EH-Studio</h2>
-        <p class="role">Owner</p>
-        <p>Leitet die Community und das Projekt.</p>
-    </div>
+        const container = document.getElementById("teamContainer");
+        container.innerHTML="";
 
-<div class="member">
-        <h2>Thyfly</h2>
-        <p class="role">Management</p>
-        <p>Verwaltet Events und Leitet das Server Team.</p>
-    </div>
+        team.forEach(member => {
 
+            let roleClass = member.role.toLowerCase();
 
-</div>
+            container.innerHTML += `
+                <div class="team-card">
+                    <img src="${member.image}">
+                    <h3>${member.name}</h3>
+                    <div class="role ${roleClass}">${member.role}</div>
+                    <p>${member.discord}</p>
+                </div>
+            `;
+        });
 
-<a href="index.html" class="back-btn">⬅ Zurück zur Startseite</a>
+    } catch(error){
+        document.getElementById("teamContainer").innerHTML =
+            "<p>Fehler beim Laden der Teamdaten.</p>";
+    }
+}
+
+loadTeam();
+</script>
 
 </body>
 </html>
-
-
-

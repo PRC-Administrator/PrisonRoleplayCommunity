@@ -178,8 +178,8 @@ window.onload = function() {
 };
 
 // 🔐 ALT + LEERTASTE = Admin Login
-document.addEventListener("keydown", function(event) {
-    if (event.altKey && event.code === "Space") {
+    document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.shiftKey && event.altKey && event.code === "KeyA") {
         const pass = prompt("Admin Passwort eingeben:");
         if (pass === ADMIN_PASSWORD) {
             adminUnlocked = true;
@@ -299,6 +299,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

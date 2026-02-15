@@ -1,14 +1,20 @@
 [
   {
     "name": "Justin",
-    "role": "Owner",
+    "role": "Haupt-Owner",
     "discord": "justin_master01",
     "image": ""
   },
   {
-    "name": "Max",
-    "role": "Admin",
-    "discord": "max#1234",
+    "name": "EH-Studio",
+    "role": "Owner",
+    "discord": "eh_studio",
     "image": ""
   }
+    {
+    "name": "ThyFly",
+    "role": "Management",
+    "discord": "tyfly2410",
+    "image": ""
+    }
 ]

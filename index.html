@@ -140,11 +140,35 @@ nav a:hover {
     box-shadow: 0 0 10px #ff00ff;
 }
 
+.admin-panel {
+    margin-bottom: 20px;
+}
+
+.admin-panel input {
+    padding: 10px;
+    width: 60%;
+    border-radius: 8px;
+    border: none;
+}
+
+.admin-panel button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #00ffff;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.admin-panel button:hover {
+    transform: scale(1.1);
+}
 
     </style>
 </head>
-    <script>
-function addNews(text, type="UPDATE") {
+<script>
+function addNews(text) {
     const container = document.getElementById("newsContainer");
     const today = new Date().toLocaleDateString("de-DE");
 
@@ -152,16 +176,20 @@ function addNews(text, type="UPDATE") {
     news.className = "news-item";
 
     news.innerHTML = `
-        <span class="badge">${type}</span>
+        <span class="badge">UPDATE</span>
         <p><strong>${today}</strong> – ${text}</p>
     `;
 
     container.prepend(news);
 }
 
-// HIER kannst du neue Updates hinzufügen:
-addNews("Website ist offiziell online!", "NEU");
-addNews("Neon Design verbessert 🔥");
+function addNewsFromInput() {
+    const input = document.getElementById("newsInput");
+    if (input.value.trim() !== "") {
+        addNews(input.value);
+        input.value = "";
+    }
+}
 </script>
 
 <body>
@@ -204,8 +232,15 @@ Oder an den Discord Support @officalprcsupport Weden.
     
 <div class="box">
     <h2>📰 News & Updates</h2>
+
+    <div class="admin-panel">
+        <input type="text" id="newsInput" placeholder="Update eingeben...">
+        <button onclick="addNewsFromInput()">Posten</button>
+    </div>
+
     <div id="newsContainer"></div>
 </div>
+
 
 
 

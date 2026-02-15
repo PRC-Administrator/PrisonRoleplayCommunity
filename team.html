@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Team | Prison Roleplay Community</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
+            background-size: 600% 600%;
+            animation: neonBackground 15s ease infinite;
+            color: white;
+            text-align: center;
+        }
+
+        @keyframes neonBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-size: 40px;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+        }
+
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .member {
+            background: #111;
+            border: 2px solid #ff00ff;
+            border-radius: 15px;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 0 20px #ff00ff;
+            transition: 0.3s;
+        }
+
+        .member:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #00ffff;
+        }
+
+        .role {
+            color: #ff00ff;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background: #00ffff;
+            color: black;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h1>👮 Unser Team</h1>
+
+<div class="team-container">
+
+    <div class="member">
+        <h2>Justin</h2>
+        <p class="role">Owner</p>
+        <p>Leitet die Community und das Projekt.</p>
+    </div>
+
+    <div class="member">
+        <h2>EH-Studio</h2>
+        <p class="role">Owner</p>
+        <p>Leitet die Community und das Projekt.</p>
+    </div>
+
+<div class="member">
+        <h2>Thyfly</h2>
+        <p class="role">Management</p>
+        <p>Verwaltet Events und Giveawys.</p>
+    </div>
+
+
+</div>
+
+<a href="index.html" class="back-btn">⬅ Zurück zur Startseite</a>
+
+</body>
+</html>

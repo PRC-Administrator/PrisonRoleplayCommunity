@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Prison Roleplay Community</title>
+    <style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+    background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
+    background-size: 600% 600%;
+    animation: neonBackground 15s ease infinite;
+}
+
+
+        header {
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 50px;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+        }
+
+        h2 {
+            color: #ff00ff;
+            text-shadow: 0 0 15px #ff00ff;
+        }
+
+        .box {
+            margin: 30px auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            background: #111;
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00ffff;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 15px;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .discord {
+            background: #5865F2;
+            box-shadow: 0 0 15px #5865F2;
+        }
+
+        .roblox {
+            background: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: #000;
+            font-size: 14px;
+            color: gray;
+        }
+        @keyframes neonBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+/* Sirenen Overlay */
+.siren {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.08));
+    animation: sirenFlash 4s infinite alternate;
+}
+
+@keyframes sirenFlash {
+    0% {
+        background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.02));
+    }
+    50% {
+        background: linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,0,255,0.08));
+    }
+    100% {
+        background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,255,0.02));
+    }
+}
+
+    </style>
+</head>
+<body>
+                <div class="siren"></div>
+
+
+<header>
+    <h1>Prison Roleplay Community</h1>
+    <h2>Gefängnis-Rollenspiel: Fluchtplan</h2>
+    <p class="description">
+PRC is an unofficial Prison Roleplay community server for the Roblox game Prison Roleplay by Nonstop Entertainment.
+ We offer realistic roleplay, active staff, and events. Our server supports both English and German players.
+</p>
+
+</header>
+
+<div class="box">
+    <p>Willkommen in unserer Community!</p>
+    <p>Erlebe spannende Gefängnis-Ausbrüche, Roleplay-Szenarien und werde Teil unseres Teams.</p>
+
+    <a href="https://discord.gg/fj9tTA5gUp" target="_blank" class="btn discord">Discord beitreten</a>
+    <a href="https://www.roblox.com/de/games/7663817366/Prison-Roleplay-Escape-Plan?privateServerLinkCode=11696943283488504404218780249072" target="_blank" class="btn roblox">Roblox Spiel starten</a>
+<a href="team.html" class="btn discord">Unser Team</a>
+
+</div>

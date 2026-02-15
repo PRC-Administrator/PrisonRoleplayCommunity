@@ -73,7 +73,6 @@ button:hover{
 #dashboard{
     display:none;
 }
-
 </style>
 </head>
 <body>
@@ -117,13 +116,6 @@ button:hover{
         <div id="logBox"></div>
     </div>
 </div>
-    <div class="section">
-    <h2>👥 Team Mitglied hinzufügen</h2>
-    <input type="text" id="teamName" placeholder="Name">
-    <input type="text" id="teamRole" placeholder="Rolle">
-    <button onclick="addTeamMember()">Hinzufügen</button>
-</div>
-
 <script>
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 const ADMIN_CODE = "8842";
@@ -140,7 +132,6 @@ function login(){
         document.getElementById("dashboard").style.display="block";
         log("Admin eingeloggt");
         initPanel();
-        loadTeamAdmin();
     } else {
         alert("Falsche Zugangsdaten");
     }
@@ -341,7 +332,6 @@ function log(text){
     box.innerHTML += "[" + time + "] " + text + "<br>";
     box.scrollTop = box.scrollHeight;
 }
-
 </script>
 </body>
 </html>

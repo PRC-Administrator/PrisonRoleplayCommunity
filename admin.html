@@ -2,7 +2,8 @@
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 const ADMIN_CODE = "8842";
 
-/* LOGIN */
+/* ================= LOGIN ================= */
+
 function login(){
     const pass = document.getElementById("password").value;
     const code = document.getElementById("code").value;
@@ -12,24 +13,28 @@ function login(){
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
         log("Admin eingeloggt");
-        checkMaintenance();
-        loadAdminUpdates();
+        initPanel();
     } else {
         alert("Falsche Zugangsdaten");
     }
 }
 
-/* Auto Login */
 window.onload = function(){
     if(sessionStorage.getItem("adminAccess")==="true"){
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
-        checkMaintenance();
-        loadAdminUpdates();
+        initPanel();
     }
 }
 
-/* WARTUNG START */
+/* Panel Initialisierung */
+function initPanel(){
+    checkMaintenance();
+    loadAdminUpdates();
+}
+
+/* ================= WARTUNG ================= */
+
 function startMaintenance(){
     const minutes = document.getElementById("durationInput").value;
 
@@ -46,7 +51,6 @@ function startMaintenance(){
     checkMaintenance();
 }
 
-/* WARTUNG STOP */
 function stopMaintenance(){
     localStorage.setItem("maintenanceMode","off");
     localStorage.removeItem("maintenanceStart");
@@ -55,12 +59,15 @@ function stopMaintenance(){
     log("Wartung manuell beendet");
 }
 
-/* COUNTDOWN */
 function checkMaintenance(){
+
     if(localStorage.getItem("maintenanceMode")==="on"){
 
         let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60000;
         let start = parseInt(localStorage.getItem("maintenanceStart"));
+
+        if(!start) return;
+
         let end = start + duration;
 
         function update(){
@@ -88,7 +95,8 @@ function checkMaintenance(){
     }
 }
 
-/* UPDATE POSTEN */
+/* ================= UPDATES ================= */
+
 function addUpdate(){
 
     const title = document.getElementById("updateTitle").value;
@@ -119,7 +127,6 @@ function addUpdate(){
     loadAdminUpdates();
 }
 
-/* UPDATES IM ADMIN ANZEIGEN */
 function loadAdminUpdates(){
 
     const list = document.getElementById("updateList");
@@ -163,7 +170,6 @@ function loadAdminUpdates(){
     });
 }
 
-/* UPDATE LÖSCHEN */
 function deleteUpdate(index){
 
     let updates = JSON.parse(localStorage.getItem("updates")) || [];
@@ -176,13 +182,13 @@ function deleteUpdate(index){
     loadAdminUpdates();
 }
 
-/* LOG SYSTEM */
-function log(text){
+/* ================= LOG ================= */
 
+function log(text){
     const time = new Date().toLocaleTimeString();
     const box = document.getElementById("logBox");
-
     box.innerHTML += "[" + time + "] " + text + "<br>";
     box.scrollTop = box.scrollHeight;
 }
 </script>
+

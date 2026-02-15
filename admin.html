@@ -73,6 +73,40 @@ button:hover{
 #dashboard{
     display:none;
 }
+    .team-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:30px;
+    margin-top:40px;
+}
+
+.team-card{
+    width:250px;
+    padding:20px;
+    background:rgba(0,0,0,0.6);
+    border:2px solid #00ffff;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 20px #00ffff;
+    transition:0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.team-card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 35px #00ffff;
+}
+
+.team-card img{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:15px;
+    border:3px solid #00ffff;
+}
+
 </style>
 </head>
 <body>
@@ -110,6 +144,20 @@ button:hover{
     <button onclick="addUpdate()">Update posten</button>
     <div id="updateList" style="margin-top:20px;"></div>
 </div>
+    <div class="section">
+    <h2>👮 Team verwalten</h2>
+
+    <input type="text" id="teamName" placeholder="Name">
+    <input type="text" id="teamRole" placeholder="Rang (z.B. Owner, Admin)">
+    <input type="text" id="teamDiscord" placeholder="Discord Name">
+    <input type="text" id="teamImage" placeholder="Bild URL">
+
+    <br>
+    <button onclick="addTeamMember()">Mitglied hinzufügen</button>
+
+    <div id="teamList" style="margin-top:20px;"></div>
+</div>
+
     <!-- Log -->
     <div class="section">
         <h2>📜 System Log</h2>
@@ -132,6 +180,7 @@ function login(){
         document.getElementById("dashboard").style.display="block";
         log("Admin eingeloggt");
         initPanel();
+        loadTeamAdmin();
     } else {
         alert("Falsche Zugangsdaten");
     }
@@ -332,6 +381,94 @@ function log(text){
     box.innerHTML += "[" + time + "] " + text + "<br>";
     box.scrollTop = box.scrollHeight;
 }
+    /* ================= TEAM ================= */
+
+function addTeamMember(){
+    const name = document.getElementById("teamName").value;
+    const role = document.getElementById("teamRole").value;
+    const discord = document.getElementById("teamDiscord").value;
+    const image = document.getElementById("teamImage").value;
+
+    if(!name || !role){
+        alert("Name und Rang sind Pflicht!");
+        return;
+    }
+
+    let team = JSON.parse(localStorage.getItem("prcTeam")) || [];
+
+    team.push({
+        name,
+        role,
+        discord,
+        image
+    });
+
+    localStorage.setItem("prcTeam", JSON.stringify(team));
+
+    document.getElementById("teamName").value="";
+    document.getElementById("teamRole").value="";
+    document.getElementById("teamDiscord").value="";
+    document.getElementById("teamImage").value="";
+
+    loadTeamAdmin();
+}
+
+function loadTeamAdmin(){
+    const list = document.getElementById("teamList");
+    list.innerHTML="";
+
+    let team = JSON.parse(localStorage.getItem("prcTeam")) || [];
+
+    team.forEach((member,index)=>{
+        list.innerHTML += `
+            <div style="
+                background:#0f0f0f;
+                padding:15px;
+                margin:10px 0;
+                border-radius:10px;
+                border:2px solid #00ff88;
+            ">
+                <strong>${member.name}</strong> - ${member.role}<br>
+                ${member.discord ? member.discord + "<br>" : ""}
+                <button onclick="deleteTeam(${index})"
+                    style="background:red;color:white;padding:5px 10px;border-radius:6px;">
+                    🗑 Entfernen
+                </button>
+            </div>
+        `;
+    });
+}
+
+function deleteTeam(index){
+    let team = JSON.parse(localStorage.getItem("prcTeam")) || [];
+    team.splice(index,1);
+    localStorage.setItem("prcTeam", JSON.stringify(team));
+    loadTeamAdmin();
+}
+function loadTeam(){
+    const container = document.getElementById("teamContainer");
+    let team = JSON.parse(localStorage.getItem("prcTeam")) || [];
+
+    container.innerHTML="";
+
+    team.forEach(member=>{
+        container.innerHTML += `
+            <div class="team-card">
+                <img src="${member.image || 'https://via.placeholder.com/100'}">
+                <h3>${member.name}</h3>
+                <p style="color:#00ffff;">${member.role}</p>
+                ${member.discord ? "<p>"+member.discord+"</p>" : ""}
+            </div>
+        `;
+    });
+}
+
+window.onload = loadTeam;
+
 </script>
+    <h1>👮 Unser Team</h1>
+
+<div class="team-container" id="teamContainer"></div>
+
 </body>
 </html>

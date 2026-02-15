@@ -2,127 +2,57 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>PRC Control Panel</title>
+<title>Admin Panel</title>
 
 <style>
-body {
+body{
     margin:0;
-    background: linear-gradient(270deg,#000,#001f1f,#000);
-    background-size: 600% 600%;
-    animation: neonBg 12s ease infinite;
-    font-family: Arial;
-    color:#00ffcc;
+    font-family:Arial;
+    background:#111;
+    color:white;
+    text-align:center;
 }
 
-@keyframes neonBg{
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
-
-.dashboard {
-    max-width: 900px;
-    margin: 60px auto;
-    background: #111;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 0 40px #00ffcc;
-}
-
-.card {
-    margin: 20px 0;
-    padding: 20px;
-    border: 2px solid #00ffcc;
-    border-radius: 15px;
-}
-
-input {
+input{
     padding:10px;
-    margin:5px;
-    background:black;
-    border:2px solid #00ffcc;
-    color:#00ffcc;
+    margin:10px;
 }
 
-button {
-    padding: 10px 20px;
-    margin:5px;
-    background:black;
-    border:2px solid #00ffcc;
-    color:#00ffcc;
+button{
+    padding:10px 20px;
+    margin:10px;
     cursor:pointer;
 }
 
-button:hover{
-    background:#00ffcc;
-    color:black;
-}
-
-h1 {
-    text-align:center;
-    text-shadow:0 0 20px #00ffcc;
+#dashboard{
+    display:none;
 }
 </style>
 </head>
 
 <body>
 
-<h1>⚡ PRC ADMIN CONTROL ⚡</h1>
-
-<!-- LOGIN -->
-<div id="login" class="dashboard">
-    <div class="card">
-        <h2>🔒 Admin Login</h2>
-        <input type="password" id="password" placeholder="Passwort">
-        <input type="text" id="code" placeholder="Sicherheitscode">
-        <br>
-        <button onclick="login()">Login</button>
-    </div>
+<div id="login">
+    <h2>🔐 Admin Login</h2>
+    <input type="password" id="password" placeholder="Passwort"><br>
+    <input type="text" id="code" placeholder="2FA Code"><br>
+    <button onclick="login()">Login</button>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="dashboard" style="display:none;">
+<div id="dashboard">
+    <h2>🎛 Admin Dashboard</h2>
 
-    <div class="card">
-        <h2>📰 News posten</h2>
-        <input type="text" id="newsText" placeholder="Update eingeben">
-        <button onclick="addNews()">Posten</button>
-    </div>
+    <h3>🚧 Wartungsmodus</h3>
 
-    <div class="card">
-        <h2>🛠 Wartungsmodus</h2>
-        <button onclick="toggleMaintenance()">EIN / AUS</button>
-    </div>
-
-    <div class="card">
-        <h2>📜 Logs</h2>
-        <button onclick="showLogs()">Anzeigen</button>
-        <button onclick="exportLogs()">Exportieren</button>
-    </div>
-
-    <div class="card">
-        <h2>🗑 Reset</h2>
-        <button onclick="clearAll()">Alles löschen</button>
-    </div>
-
-    <div class="card">
-        <button onclick="logout()">🚪 Logout</button>
-    </div>
-
+    <input type="number" id="durationInput" placeholder="Minuten (z.B. 30)">
+    <br>
+    <button onclick="startMaintenance()">Wartung starten</button>
+    <button onclick="stopMaintenance()">Wartung beenden</button>
 </div>
 
 <script>
-
-/* ============================
-   🔐 SICHERHEIT
-============================ */
-
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 const ADMIN_CODE = "8842";
-
-/* ============================
-   🔒 LOGIN SYSTEM
-============================ */
 
 function login(){
     const pass = document.getElementById("password").value;
@@ -132,94 +62,34 @@ function login(){
         sessionStorage.setItem("adminAccess", "true");
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
-        logAction("Admin Login erfolgreich");
     } else {
         alert("Falsche Daten");
-        window.location.href = "index.html";
+        window.location.href="index.html";
     }
 }
 
-function logout(){
-    sessionStorage.removeItem("adminAccess");
-    location.reload();
-}
+function startMaintenance(){
 
-/* ============================
-   📰 NEWS SYSTEM
-============================ */
+    const minutes = document.getElementById("durationInput").value;
 
-function addNews(){
-    const text = document.getElementById("newsText").value;
-    if(!text) return;
-
-    const today = new Date().toLocaleDateString("de-DE");
-    const existing = JSON.parse(localStorage.getItem("prcNews")) || [];
-    existing.unshift({text:text, date:today});
-    localStorage.setItem("prcNews", JSON.stringify(existing));
-
-    logAction("News gepostet: " + text);
-    alert("News hinzugefügt!");
-    document.getElementById("newsText").value="";
-}
-
-/* ============================
-   🛠 WARTUNGSMODUS
-============================ */
-
-function toggleMaintenance(){
-    const current = localStorage.getItem("maintenanceMode");
-
-    if(current === "on"){
-        localStorage.setItem("maintenanceMode","off");
-        logAction("Wartungsmodus AUS");
-        alert("Website ONLINE");
-    } else {
-        localStorage.setItem("maintenanceMode","on");
-        logAction("Wartungsmodus EIN");
-        alert("Website in Wartung");
+    if(!minutes || minutes <= 0){
+        alert("Bitte gültige Minuten eingeben.");
+        return;
     }
+
+    localStorage.setItem("maintenanceMode","on");
+    localStorage.setItem("maintenanceDuration", minutes);
+    localStorage.setItem("maintenanceStart", Date.now());
+
+    alert("Wartung für " + minutes + " Minuten aktiviert.");
 }
 
-/* ============================
-   📜 LOG SYSTEM
-============================ */
-
-function logAction(action){
-    const logs = JSON.parse(localStorage.getItem("adminLogs")) || [];
-    logs.unshift(new Date().toLocaleString("de-DE") + " → " + action);
-    localStorage.setItem("adminLogs", JSON.stringify(logs));
+function stopMaintenance(){
+    localStorage.setItem("maintenanceMode","off");
+    localStorage.removeItem("maintenanceStart");
+    alert("Wartung deaktiviert.");
 }
-
-function showLogs(){
-    const logs = JSON.parse(localStorage.getItem("adminLogs")) || [];
-    alert(logs.join("\n"));
-}
-
-function exportLogs(){
-    const logs = localStorage.getItem("adminLogs");
-    if(!logs) return alert("Keine Logs vorhanden");
-
-    const blob = new Blob([logs], {type:"text/plain"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "admin-logs.txt";
-    a.click();
-}
-
-/* ============================
-   🗑 RESET
-============================ */
-
-function clearAll(){
-    if(confirm("Wirklich alles löschen?")){
-        localStorage.clear();
-        logAction("System Reset");
-        alert("Alles gelöscht");
-    }
-}
-
 </script>
 
 </body>
 </html>
- 

@@ -11,9 +11,21 @@ if(localStorage.getItem("maintenanceMode")==="on"){
     <title>Prison Roleplay Community</title>
     <style>
         body
-        <div id="maintenanceBanner">
-    🚧 IN WARTUNG 🚧
-</div>
+        #maintenanceBanner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: red;
+    color: white;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 15px;
+    z-index: 9999;
+    display: none;
+}
+
 
         {
     margin: 0;
@@ -320,14 +332,17 @@ function saveNews(newsData) {
     }, 2000);
 }
 
-</script>
 <script>
 window.addEventListener("load", function(){
+    const banner = document.getElementById("maintenanceBanner");
     if(localStorage.getItem("maintenanceMode")==="on"){
-        document.getElementById("maintenanceBanner").style.display="block";
+        banner.style.display = "block";
+    } else {
+        banner.style.display = "none";
     }
 });
 </script>
+
 
 <body>
     <div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
@@ -384,6 +399,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

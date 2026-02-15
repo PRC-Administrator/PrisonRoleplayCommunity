@@ -168,43 +168,61 @@ nav a:hover {
     </style>
 </head>
 <script>
-const ADMIN_PASSWORD = "PRC-Director2026"; // HIER dein Passwort ändern
+const ADMIN_PASSWORD = "PRC2026"; // Hier dein Passwort ändern
+
+// Beim Laden gespeicherte News anzeigen
+window.onload = function() {
+    const savedNews = JSON.parse(localStorage.getItem("prcNews")) || [];
+    savedNews.forEach(news => createNewsElement(news.text, news.date));
+};
+
+function showLogin() {
+    document.getElementById("adminPanel").style.display = "block";
+}
 
 function checkPassword() {
     const entered = document.getElementById("adminPassword").value;
-
     if (entered === ADMIN_PASSWORD) {
-        document.getElementById("newsInput").disabled = false;
-        document.getElementById("postBtn").disabled = false;
+        document.getElementById("adminControls").style.display = "block";
         alert("Admin freigeschaltet ✅");
     } else {
         alert("Falsches Passwort ❌");
     }
 }
 
-function addNews(text) {
+function addNewsFromInput() {
+    const input = document.getElementById("newsInput");
+    if (input.value.trim() !== "") {
+        const today = new Date().toLocaleDateString("de-DE");
+        const newsData = { text: input.value, date: today };
+
+        saveNews(newsData);
+        createNewsElement(newsData.text, newsData.date);
+
+        input.value = "";
+    }
+}
+
+function createNewsElement(text, date) {
     const container = document.getElementById("newsContainer");
-    const today = new Date().toLocaleDateString("de-DE");
 
     const news = document.createElement("div");
     news.className = "news-item";
-
     news.innerHTML = `
         <span class="badge">UPDATE</span>
-        <p><strong>${today}</strong> – ${text}</p>
+        <p><strong>${date}</strong> – ${text}</p>
     `;
 
     container.prepend(news);
 }
 
-function addNewsFromInput() {
-    const input = document.getElementById("newsInput");
-    if (input.value.trim() !== "") {
-        addNews(input.value);
-        input.value = "";
-    }
+function saveNews(newsData) {
+    const existing = JSON.parse(localStorage.getItem("prcNews")) || [];
+    existing.unshift(newsData);
+    localStorage.setItem("prcNews", JSON.stringify(existing));
 }
 </script>
+
 
 <body>
     <nav>
@@ -246,15 +264,24 @@ Oder an den Discord Support @officalprcsupport Weden.
     
 <div class="box">
     <h2>📰 News & Updates</h2>
-<div class="admin-panel">
-    <input type="password" id="adminPassword" placeholder="Admin Passwort">
-    <input type="text" id="newsInput" placeholder="Update eingeben..." disabled>
-    <button onclick="checkPassword()">Freischalten</button>
-    <button onclick="addNewsFromInput()" id="postBtn" disabled>Posten</button>
-</div>
+
+    <button onclick="showLogin()" id="adminLoginBtn">🔒 Admin Login</button>
+
+    <div class="admin-panel" id="adminPanel" style="display:none;">
+        <input type="password" id="adminPassword" placeholder="Admin Passwort">
+        <button onclick="checkPassword()">Freischalten</button>
+
+        <div id="adminControls" style="display:none; margin-top:15px;">
+            <input type="text" id="newsInput" placeholder="Update eingeben...">
+            <button onclick="addNewsFromInput()">Posten</button>
+        </div>
+    </div>
 
     <div id="newsContainer"></div>
 </div>
+
+
+
 
 
 

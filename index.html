@@ -168,21 +168,18 @@ nav a:hover {
     </style>
 </head>
 <script>
-const ADMIN_PASSWORD = "PRC-Director2026"; // Dein Passwort
-
+const ADMIN_PASSWORD = "PRC2026"; // Dein Passwort
 let adminUnlocked = false;
 
-// Beim Laden gespeicherte News anzeigen
+// Gespeicherte News laden
 window.onload = function() {
     const savedNews = JSON.parse(localStorage.getItem("prcNews")) || [];
     savedNews.forEach(news => createNewsElement(news.text, news.date));
 };
 
-// 😎 GEHEIMER ADMIN-KLICK (5x auf Titel klicken)
-let clickCount = 0;
-document.querySelector("h2").addEventListener("click", function() {
-    clickCount++;
-    if (clickCount === 5) {
+// 🔐 ALT + LEERTASTE = Admin Login
+document.addEventListener("keydown", function(event) {
+    if (event.altKey && event.code === "Space") {
         const pass = prompt("Admin Passwort eingeben:");
         if (pass === ADMIN_PASSWORD) {
             adminUnlocked = true;
@@ -191,7 +188,6 @@ document.querySelector("h2").addEventListener("click", function() {
         } else {
             alert("Falsches Passwort ❌");
         }
-        clickCount = 0;
     }
 });
 
@@ -250,7 +246,6 @@ function saveNews(newsData) {
 }
 </script>
 
-
 <body>
     <nav>
     <a href="index.html">Start</a>
@@ -304,6 +299,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

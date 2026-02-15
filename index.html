@@ -242,44 +242,45 @@ window.addEventListener("load", function(){
     const savedNews = JSON.parse(localStorage.getItem("prcNews")) || [];
     savedNews.forEach(news => createNewsElement(news.text, news.date));
 
-    if(localStorage.getItem("maintenanceMode")==="on"){
+if(localStorage.getItem("maintenanceMode")==="on"){
+    document.getElementById("maintenanceBanner").style.display="block";
+    document.getElementById("maintenanceOverlay").style.display="flex";
 
-        document.getElementById("maintenanceBanner").style.display="block";
-        document.getElementById("maintenanceOverlay").style.display="flex";
+    document.querySelectorAll("button, a").forEach(el=>{
+        el.style.pointerEvents="none";
+        el.style.opacity="0.5";
+    });
 
-        document.querySelectorAll("button, a").forEach(el=>{
-            el.style.pointerEvents="none";
-            el.style.opacity="0.5";
-        });
+    const duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60000;
+    const startTime = parseInt(localStorage.getItem("maintenanceStart"));
 
-       const duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60000;
-const startTime = parseInt(localStorage.getItem("maintenanceStart"));
+    if(!startTime) return;
 
-if(!startTime) return;
+    const endTime = startTime + duration;
 
-const endTime = startTime + duration;
+    function updateCountdown(){
+        const now = Date.now();
+        const remaining = endTime - now;
 
-
-        function updateCountdown(){
-            const now = Date.now();
-            const remaining = endTime - now;
-
-            if(remaining <= 0){
-                document.getElementById("countdown").innerText = "Wartung beendet";
-                return;
-            }
-
-            const minutes = Math.floor((remaining / 1000 / 60) % 60);
-            const seconds = Math.floor((remaining / 1000) % 60);
-
-            document.getElementById("countdown").innerText =
-                "Verbleibend: " + minutes + "m " + seconds + "s";
-
-            requestAnimationFrame(updateCountdown);
+        if(remaining <= 0){
+            localStorage.setItem("maintenanceMode","off");
+            localStorage.removeItem("maintenanceStart");
+            location.reload();
+            return;
         }
 
-        updateCountdown();
+        const minutes = Math.floor((remaining / 1000 / 60) % 60);
+        const seconds = Math.floor((remaining / 1000) % 60);
+
+        document.getElementById("countdown").innerText =
+            "Verbleibend: " + minutes + "m " + seconds + "s";
+
+        requestAnimationFrame(updateCountdown);
     }
+
+    updateCountdown();
+}
+
 });
 
 /* ADMIN SHORTCUT */
@@ -336,6 +337,7 @@ window.addEventListener("load", loadUpdates);
     
 </body>
 </html>
+
 
 
 

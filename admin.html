@@ -122,6 +122,27 @@ button:hover{
     <div id="updateList" style="margin-top:20px;"></div>
 </div>
 
+            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
+                <strong>${u.title}</strong><br>
+                <small>${u.date}</small><br>
+                ${u.text}
+                <br>
+                <button onclick="deleteUpdate(${index})"
+                    style="background:red;color:white;margin-top:5px;">
+                    Löschen
+                </button>
+            </div>
+
+            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
+                <strong>${u.title}</strong><br>
+                <small>${u.date}</small><br>
+                ${u.text}
+                <br>
+                <button onclick="deleteUpdate(${index})"
+                    style="background:red;color:white;margin-top:5px;">
+                    Löschen
+                </button>
+            </div>
     <!-- Log -->
     <div class="section">
         <h2>📜 System Log</h2>
@@ -216,6 +237,68 @@ function checkMaintenance(){
         update();
     }
 }
+/* ======================
+   UPDATE SYSTEM
+====================== */
+
+function addUpdate(){
+    const title = document.getElementById("updateTitle").value;
+    const text = document.getElementById("updateText").value;
+
+    if(!title || !text){
+        alert("Bitte Titel und Text eingeben.");
+        return;
+    }
+
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+
+    updates.unshift({
+        title:title,
+        text:text,
+        date:new Date().toLocaleString()
+    });
+
+    localStorage.setItem("updates", JSON.stringify(updates));
+
+    document.getElementById("updateTitle").value="";
+    document.getElementById("updateText").value="";
+
+    log("Neues Update veröffentlicht");
+    loadAdminUpdates();
+}
+
+function loadAdminUpdates(){
+    const list = document.getElementById("updateList");
+    list.innerHTML="";
+
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+
+    updates.forEach((u,index)=>{
+        list.innerHTML += `
+            <div style="background:#0f0f0f;padding:10px;margin:10px 0;border-radius:8px;">
+                <strong>${u.title}</strong><br>
+                <small>${u.date}</small><br>
+                ${u.text}
+                <br>
+                <button onclick="deleteUpdate(${index})"
+                    style="background:red;color:white;margin-top:5px;">
+                    Löschen
+                </button>
+            </div>
+        `;
+    });
+}
+
+function deleteUpdate(index){
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+    updates.splice(index,1);
+    localStorage.setItem("updates", JSON.stringify(updates));
+    log("Update gelöscht");
+    loadAdminUpdates();
+}
+
+/* Beim Laden anzeigen */
+window.addEventListener("load", loadAdminUpdates);
 
 /* LOG SYSTEM */
 function log(text){
@@ -224,6 +307,7 @@ function log(text){
     box.innerHTML += "[" + time + "] " + text + "<br>";
     box.scrollTop = box.scrollHeight;
 }
+ 
 </script>
 
 </body>

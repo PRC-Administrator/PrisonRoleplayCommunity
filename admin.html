@@ -164,6 +164,13 @@ button:hover{
         <div id="logBox"></div>
     </div>
 </div>
+    <div class="section">
+    <h2>👥 Team Mitglied hinzufügen</h2>
+    <input type="text" id="teamName" placeholder="Name">
+    <input type="text" id="teamRole" placeholder="Rolle">
+    <button onclick="addTeamMember()">Hinzufügen</button>
+</div>
+
 <script>
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 const ADMIN_CODE = "8842";
@@ -386,22 +393,27 @@ function log(text){
 function addTeamMember(){
     const name = document.getElementById("teamName").value;
     const role = document.getElementById("teamRole").value;
-    const discord = document.getElementById("teamDiscord").value;
-    const image = document.getElementById("teamImage").value;
 
     if(!name || !role){
-        alert("Name und Rang sind Pflicht!");
+        alert("Bitte alles ausfüllen.");
         return;
     }
 
-    let team = JSON.parse(localStorage.getItem("prcTeam")) || [];
+    let team = JSON.parse(localStorage.getItem("teamMembers")) || [];
 
     team.push({
-        name,
-        role,
-        discord,
-        image
+        name: name,
+        role: role
     });
+
+    localStorage.setItem("teamMembers", JSON.stringify(team));
+
+    document.getElementById("teamName").value = "";
+    document.getElementById("teamRole").value = "";
+
+    log("Neues Team Mitglied hinzugefügt");
+}
+);
 
     localStorage.setItem("prcTeam", JSON.stringify(team));
 

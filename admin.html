@@ -1,96 +1,174 @@
-<script>
-if(!sessionStorage.getItem("adminAccess")){
-    window.location.href = "index.html";
-}
-</script>
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>PRC Admin Panel</title>
+<title>PRC Control Panel</title>
+
 <style>
 body {
-    background: #000;
-    color: #00ff00;
+    margin:0;
+    background: linear-gradient(270deg,#000,#001f1f,#000);
+    background-size: 600% 600%;
+    animation: neonBg 12s ease infinite;
     font-family: Arial;
-    text-align: center;
+    color:#00ffcc;
 }
 
-h1 {
-    text-shadow: 0 0 20px #00ff00;
+@keyframes neonBg{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.dashboard {
+    max-width: 900px;
+    margin: 60px auto;
+    background: #111;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px #00ffcc;
+}
+
+.card {
+    margin: 20px 0;
+    padding: 20px;
+    border: 2px solid #00ffcc;
+    border-radius: 15px;
+}
+
+input {
+    padding:10px;
+    margin:5px;
+    background:black;
+    border:2px solid #00ffcc;
+    color:#00ffcc;
 }
 
 button {
-    margin: 10px;
     padding: 10px 20px;
-    background: black;
-    color: #00ff00;
-    border: 2px solid #00ff00;
-    cursor: pointer;
+    margin:5px;
+    background:black;
+    border:2px solid #00ffcc;
+    color:#00ffcc;
+    cursor:pointer;
 }
 
-button:hover {
-    background: #00ff00;
-    color: black;
+button:hover{
+    background:#00ffcc;
+    color:black;
 }
-#dashboard { display:none; }
+
+h1 {
+    text-align:center;
+    text-shadow:0 0 20px #00ffcc;
+}
 </style>
 </head>
+
 <body>
 
-<h1>⚡ PRC ADMIN PANEL ⚡</h1>
+<h1>⚡ PRC ADMIN CONTROL ⚡</h1>
 
-<div id="login">
-    <input type="password" id="password" placeholder="Admin Passwort">
-    <button onclick="login()">Login</button>
+<!-- LOGIN -->
+<div id="login" class="dashboard">
+    <div class="card">
+        <h2>🔒 Admin Login</h2>
+        <input type="password" id="password" placeholder="Passwort">
+        <input type="text" id="code" placeholder="Sicherheitscode">
+        <br>
+        <button onclick="login()">Login</button>
+    </div>
 </div>
 
-<div id="dashboard">
-    <h2>📰 News posten</h2>
-    <input type="text" id="newsText" placeholder="Update eingeben">
-    <button onclick="addNews()">Posten</button>
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard" style="display:none;">
 
-    <h2>🛠 Wartungsmodus</h2>
-    <button onclick="toggleMaintenance()">EIN / AUS</button>
+    <div class="card">
+        <h2>📰 News posten</h2>
+        <input type="text" id="newsText" placeholder="Update eingeben">
+        <button onclick="addNews()">Posten</button>
+    </div>
 
-    <h2>📜 Logs</h2>
-    <button onclick="showLogs()">Logs anzeigen</button>
+    <div class="card">
+        <h2>🛠 Wartungsmodus</h2>
+        <button onclick="toggleMaintenance()">EIN / AUS</button>
+    </div>
 
-    <h2>🗑 Reset</h2>
-    <button onclick="clearAll()">Alles löschen</button>
+    <div class="card">
+        <h2>📜 Logs</h2>
+        <button onclick="showLogs()">Anzeigen</button>
+        <button onclick="exportLogs()">Exportieren</button>
+    </div>
+
+    <div class="card">
+        <h2>🗑 Reset</h2>
+        <button onclick="clearAll()">Alles löschen</button>
+    </div>
+
+    <div class="card">
+        <button onclick="logout()">🚪 Logout</button>
+    </div>
+
 </div>
 
 <script>
+
+/* ============================
+   🔐 SICHERHEIT
+============================ */
+
 const ADMIN_PASSWORD = "PRC2026";
+const ADMIN_CODE = "8842";
+
+/* ============================
+   🔒 LOGIN SYSTEM
+============================ */
 
 function login(){
     const pass = document.getElementById("password").value;
-    if(pass === ADMIN_PASSWORD){
+    const code = document.getElementById("code").value;
+
+    if(pass === ADMIN_PASSWORD && code === ADMIN_CODE){
+        sessionStorage.setItem("adminAccess", "true");
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
-        logAction("Admin Login");
+        logAction("Admin Login erfolgreich");
     } else {
-        alert("Falsches Passwort");
+        alert("Falsche Daten");
+        window.location.href = "index.html";
     }
 }
 
+function logout(){
+    sessionStorage.removeItem("adminAccess");
+    location.reload();
+}
+
+/* ============================
+   📰 NEWS SYSTEM
+============================ */
+
 function addNews(){
     const text = document.getElementById("newsText").value;
-    const today = new Date().toLocaleDateString("de-DE");
+    if(!text) return;
 
+    const today = new Date().toLocaleDateString("de-DE");
     const existing = JSON.parse(localStorage.getItem("prcNews")) || [];
     existing.unshift({text:text, date:today});
     localStorage.setItem("prcNews", JSON.stringify(existing));
 
     logAction("News gepostet: " + text);
     alert("News hinzugefügt!");
+    document.getElementById("newsText").value="";
 }
+
+/* ============================
+   🛠 WARTUNGSMODUS
+============================ */
 
 function toggleMaintenance(){
     const current = localStorage.getItem("maintenanceMode");
+
     if(current === "on"){
         localStorage.setItem("maintenanceMode","off");
         logAction("Wartungsmodus AUS");
@@ -101,6 +179,10 @@ function toggleMaintenance(){
         alert("Website in Wartung");
     }
 }
+
+/* ============================
+   📜 LOG SYSTEM
+============================ */
 
 function logAction(action){
     const logs = JSON.parse(localStorage.getItem("adminLogs")) || [];
@@ -113,12 +195,29 @@ function showLogs(){
     alert(logs.join("\n"));
 }
 
+function exportLogs(){
+    const logs = localStorage.getItem("adminLogs");
+    if(!logs) return alert("Keine Logs vorhanden");
+
+    const blob = new Blob([logs], {type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "admin-logs.txt";
+    a.click();
+}
+
+/* ============================
+   🗑 RESET
+============================ */
+
 function clearAll(){
     if(confirm("Wirklich alles löschen?")){
         localStorage.clear();
+        logAction("System Reset");
         alert("Alles gelöscht");
     }
 }
+
 </script>
 
 </body>

@@ -2,72 +2,148 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>PRC Admin Panel</title>
 
 <style>
 body{
     margin:0;
-    font-family:Arial;
-    background:#111;
+    font-family:Arial, sans-serif;
+    background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
+    background-size:600% 600%;
+    animation: neonBG 15s ease infinite;
     color:white;
     text-align:center;
+}
+
+@keyframes neonBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.panel{
+    margin:40px auto;
+    padding:30px;
+    width:90%;
+    max-width:600px;
+    background:#111;
+    border:2px solid #00ffff;
+    border-radius:15px;
+    box-shadow:0 0 25px #00ffff;
 }
 
 input{
     padding:10px;
     margin:10px;
+    width:80%;
+    border-radius:8px;
+    border:none;
 }
 
 button{
     padding:10px 20px;
     margin:10px;
+    border:none;
+    border-radius:8px;
     cursor:pointer;
+    font-weight:bold;
+}
+
+.startBtn{
+    background:green;
+    color:white;
+}
+
+.stopBtn{
+    background:red;
+    color:white;
 }
 
 #dashboard{
     display:none;
+}
+
+#logBox{
+    margin-top:20px;
+    text-align:left;
+    max-height:150px;
+    overflow-y:auto;
+    background:#1a1a1a;
+    padding:10px;
+    border-radius:10px;
+    font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="login">
+<!-- LOGIN -->
+<div id="login" class="panel">
     <h2>🔐 Admin Login</h2>
     <input type="password" id="password" placeholder="Passwort"><br>
     <input type="text" id="code" placeholder="2FA Code"><br>
     <button onclick="login()">Login</button>
 </div>
 
-<div id="dashboard">
-    <h2>🎛 Admin Dashboard</h2>
+<!-- DASHBOARD -->
+<div id="dashboard" class="panel">
+    <h2>🎛 PRC Admin Dashboard</h2>
 
     <h3>🚧 Wartungsmodus</h3>
 
     <input type="number" id="durationInput" placeholder="Minuten (z.B. 30)">
     <br>
-    <button onclick="startMaintenance()">Wartung starten</button>
-    <button onclick="stopMaintenance()">Wartung beenden</button>
+
+    <button class="startBtn" onclick="startMaintenance()">
+        Wartung starten
+    </button>
+
+    <button class="stopBtn" onclick="stopMaintenance()">
+        Wartung beenden
+    </button>
+
+    <h3>⏳ Laufender Countdown</h3>
+    <div id="liveCountdown">Kein aktiver Wartungsmodus</div>
+
+    <h3>📜 Admin Log</h3>
+    <div id="logBox"></div>
 </div>
 
 <script>
 const ADMIN_PASSWORD = "PRC2026";
 const ADMIN_CODE = "8842";
 
+/* ======================
+   LOGIN
+====================== */
 function login(){
     const pass = document.getElementById("password").value;
     const code = document.getElementById("code").value;
 
     if(pass === ADMIN_PASSWORD && code === ADMIN_CODE){
-        sessionStorage.setItem("adminAccess", "true");
+        sessionStorage.setItem("adminAccess","true");
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
+        logAction("Admin Login erfolgreich");
+        checkActiveMaintenance();
     } else {
         alert("Falsche Daten");
-        window.location.href="index.html";
     }
 }
 
+/* Auto Login wenn Tab noch offen */
+window.onload = function(){
+    if(sessionStorage.getItem("adminAccess")==="true"){
+        document.getElementById("login").style.display="none";
+        document.getElementById("dashboard").style.display="block";
+        checkActiveMaintenance();
+    }
+}
+
+/* ======================
+   WARTUNG STARTEN
+====================== */
 function startMaintenance(){
 
     const minutes = document.getElementById("durationInput").value;
@@ -81,16 +157,67 @@ function startMaintenance(){
     localStorage.setItem("maintenanceDuration", minutes);
     localStorage.setItem("maintenanceStart", Date.now());
 
-    alert("Wartung für " + minutes + " Minuten aktiviert.");
+    logAction("Wartung gestartet für " + minutes + " Minuten");
+    checkActiveMaintenance();
 }
 
+/* ======================
+   WARTUNG STOPPEN
+====================== */
 function stopMaintenance(){
     localStorage.setItem("maintenanceMode","off");
     localStorage.removeItem("maintenanceStart");
-    alert("Wartung deaktiviert.");
+    logAction("Wartung manuell beendet");
+    document.getElementById("liveCountdown").innerText =
+        "Kein aktiver Wartungsmodus";
+}
+
+/* ======================
+   LIVE COUNTDOWN
+====================== */
+function checkActiveMaintenance(){
+
+    if(localStorage.getItem("maintenanceMode")==="on"){
+
+        let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60 * 1000;
+        let startTime = parseInt(localStorage.getItem("maintenanceStart"));
+        const endTime = startTime + duration;
+
+        function update(){
+            const remaining = endTime - Date.now();
+
+            if(remaining <= 0){
+                localStorage.setItem("maintenanceMode","off");
+                localStorage.removeItem("maintenanceStart");
+                document.getElementById("liveCountdown").innerText =
+                    "Wartung beendet";
+                logAction("Wartung automatisch beendet");
+                return;
+            }
+
+            const minutes = Math.floor((remaining/1000/60)%60);
+            const seconds = Math.floor((remaining/1000)%60);
+
+            document.getElementById("liveCountdown").innerText =
+                minutes + "m " + seconds + "s verbleibend";
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+    }
+}
+
+/* ======================
+   LOG SYSTEM
+====================== */
+function logAction(text){
+    const time = new Date().toLocaleTimeString();
+    const logBox = document.getElementById("logBox");
+    logBox.innerHTML += "[" + time + "] " + text + "<br>";
+    logBox.scrollTop = logBox.scrollHeight;
 }
 </script>
 
 </body>
 </html>
-

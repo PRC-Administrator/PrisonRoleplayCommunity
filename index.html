@@ -252,10 +252,13 @@ window.addEventListener("load", function(){
             el.style.opacity="0.5";
         });
 
-        const duration = 30 * 60 * 1000;
-        const startTime = localStorage.getItem("maintenanceStart") || Date.now();
-        localStorage.setItem("maintenanceStart", startTime);
-        const endTime = parseInt(startTime) + duration;
+       const duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60000;
+const startTime = parseInt(localStorage.getItem("maintenanceStart"));
+
+if(!startTime) return;
+
+const endTime = startTime + duration;
+
 
         function updateCountdown(){
             const now = Date.now();
@@ -333,6 +336,7 @@ window.addEventListener("load", loadUpdates);
     
 </body>
 </html>
+
 
 
 

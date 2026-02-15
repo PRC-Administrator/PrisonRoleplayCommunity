@@ -5,67 +5,167 @@
 <title>Prison Roleplay Community</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    text-align:center;
-    background:#0f0f0f;
-    color:white;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+    background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
+    background-size: 600% 600%;
+    animation: neonBackground 15s ease infinite;
 }
 
-nav{
-    background:black;
-    padding:15px;
+@keyframes neonBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-nav a{
-    color:white;
-    margin:0 20px;
-    text-decoration:none;
+nav {
+    background: #000;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    box-shadow: 0 0 15px #00ffff;
 }
 
-.box{
-    margin:40px auto;
-    padding:30px;
-    width:80%;
-    max-width:600px;
-    background:#111;
-    border:2px solid cyan;
-    border-radius:10px;
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
 }
 
-#maintenanceBanner{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    background:red;
-    color:white;
-    font-size:40px;
-    padding:20px;
-    display:none;
-    z-index:9999;
+nav a:hover {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
 }
 
-#maintenanceOverlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.9);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    font-size:40px;
-    z-index:9998;
+header {
+    padding: 40px;
 }
 
-#countdown{
-    font-size:30px;
-    margin-top:20px;
-    color:red;
+h1 {
+    font-size: 50px;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+}
+
+h2 {
+    color: #ff00ff;
+    text-shadow: 0 0 15px #ff00ff;
+}
+
+.box {
+    margin: 30px auto;
+    padding: 30px;
+    width: 80%;
+    max-width: 600px;
+    background: #111;
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+.btn {
+    display: inline-block;
+    margin: 15px;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.discord {
+    background: #5865F2;
+    box-shadow: 0 0 15px #5865F2;
+}
+
+.roblox {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.news-item {
+    background: #1a1a1a;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ff00ff;
+}
+
+.badge {
+    background: #ff00ff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#adminOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,255,0,0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 30px #00ff00;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+}
+
+#maintenanceBanner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: red;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 20px;
+    z-index: 99999;
+    display: none;
+}
+
+#maintenanceOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 99998;
+    color: white;
+    font-size: 40px;
+}
+
+#countdown {
+    font-size: 30px;
+    margin-top: 20px;
+    color: red;
+    text-shadow: 0 0 20px red;
 }
 </style>
 </head>
@@ -79,55 +179,66 @@ nav a{
     <div id="countdown"></div>
 </div>
 
+<div id="adminOverlay">⚡ ADMIN MODE ⚡</div>
+
 <nav>
     <a href="index.html">Start</a>
     <a href="team.html">Team</a>
     <a href="regeln.html">Regeln</a>
 </nav>
 
-<div class="box">
+<header>
     <h1>Prison Roleplay Community</h1>
-    <p>Willkommen auf unserer Website!</p>
+    <h2>Gefängnis-Rollenspiel: Fluchtplan</h2>
+</header>
+
+<div class="box" id="adminBox">
+    <p>Willkommen in unserer Community!</p>
+    <a href="#" class="btn discord">Discord beitreten</a>
+    <a href="#" class="btn roblox">Roblox Spiel starten</a>
+</div>
+
+<div class="box">
+    <h2>📰 News & Updates</h2>
+    <div id="newsContainer"></div>
 </div>
 
 <script>
+const ADMIN_PASSWORD = "PRC-Administrator2026";
+
 window.addEventListener("load", function(){
     if(localStorage.getItem("maintenanceMode")==="on"){
         startMaintenance();
     }
 });
 
+/* =========================
+   WARTUNG STARTEN
+========================= */
 function startMaintenance(){
 
     document.getElementById("maintenanceBanner").style.display="block";
     document.getElementById("maintenanceOverlay").style.display="flex";
 
-    document.querySelectorAll("a, button").forEach(el=>{
+    document.querySelectorAll("a").forEach(el=>{
         el.style.pointerEvents="none";
         el.style.opacity="0.5";
     });
 
     let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60 * 1000;
     let startTime = parseInt(localStorage.getItem("maintenanceStart"));
-
-    if(!duration || !startTime){
-        return;
-    }
-
     const endTime = startTime + duration;
 
     function updateCountdown(){
         const remaining = endTime - Date.now();
 
         if(remaining <= 0){
-            localStorage.setItem("maintenanceMode","off");
-            localStorage.removeItem("maintenanceStart");
-            location.reload();
+            endMaintenance();
             return;
         }
 
-        const minutes = Math.floor((remaining/1000/60)%60);
-        const seconds = Math.floor((remaining/1000)%60);
+        const minutes = Math.floor((remaining / 1000 / 60) % 60);
+        const seconds = Math.floor((remaining / 1000) % 60);
 
         document.getElementById("countdown").innerText =
             "Verbleibend: " + minutes + "m " + seconds + "s";
@@ -137,10 +248,83 @@ function startMaintenance(){
 
     updateCountdown();
 }
+
+/* =========================
+   WARTUNG BEENDEN
+========================= */
+function endMaintenance(){
+    localStorage.setItem("maintenanceMode","off");
+    localStorage.removeItem("maintenanceStart");
+
+    document.getElementById("maintenanceOverlay").style.display="none";
+    document.getElementById("maintenanceBanner").style.display="none";
+
+    document.querySelectorAll("a").forEach(el=>{
+        el.style.pointerEvents="auto";
+        el.style.opacity="1";
+    });
+}
+
+/* =========================
+   ADMIN SHORTCUT
+========================= */
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.shiftKey && event.altKey && event.code === "KeyA") {
+        const pass = prompt("Admin Passwort:");
+        if (pass === ADMIN_PASSWORD) {
+            activateAdminAnimation();
+            showAdminPanel();
+        }
+    }
+});
+
+function showAdminPanel(){
+
+    const panel = document.createElement("div");
+    panel.style.marginBottom = "20px";
+
+    panel.innerHTML = `
+        <input type="number" id="durationInput" placeholder="Minuten (z.B. 30)">
+        <button onclick="activateMaintenance()">Wartung starten</button>
+        <button onclick="endMaintenance()">Wartung beenden</button>
+    `;
+
+    document.getElementById("adminBox").prepend(panel);
+}
+
+function activateMaintenance(){
+
+    const minutes = document.getElementById("durationInput").value;
+
+    if(!minutes || minutes <= 0){
+        alert("Bitte gültige Minuten eingeben.");
+        return;
+    }
+
+    localStorage.setItem("maintenanceMode","on");
+    localStorage.setItem("maintenanceDuration", minutes);
+    localStorage.setItem("maintenanceStart", Date.now());
+
+    startMaintenance();
+}
+
+/* =========================
+   ADMIN ANIMATION
+========================= */
+function activateAdminAnimation() {
+    const overlay = document.getElementById("adminOverlay");
+    overlay.style.opacity = "1";
+    setTimeout(() => {
+        overlay.style.opacity = "0";
+    }, 2000);
+}
 </script>
 
 </body>
 </html>
+
+
+
 
 
 

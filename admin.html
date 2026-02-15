@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>PRC Admin Panel</title>
+<style>
+body {
+    background: #000;
+    color: #00ff00;
+    font-family: Arial;
+    text-align: center;
+}
 
+h1 {
+    text-shadow: 0 0 20px #00ff00;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    background: black;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00ff00;
+    color: black;
+}
+#dashboard { display:none; }
+</style>
+</head>
+<body>
+
+<h1>⚡ PRC ADMIN PANEL ⚡</h1>
+
+<div id="login">
+    <input type="password" id="password" placeholder="Admin Passwort">
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="dashboard">
+    <h2>📰 News posten</h2>
+    <input type="text" id="newsText" placeholder="Update eingeben">
+    <button onclick="addNews()">Posten</button>
+
+    <h2>🛠 Wartungsmodus</h2>
+    <button onclick="toggleMaintenance()">EIN / AUS</button>
+
+    <h2>📜 Logs</h2>
+    <button onclick="showLogs()">Logs anzeigen</button>
+
+    <h2>🗑 Reset</h2>
+    <button onclick="clearAll()">Alles löschen</button>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "PRC2026";
+
+function login(){
+    const pass = document.getElementById("password").value;
+    if(pass === ADMIN_PASSWORD){
+        document.getElementById("login").style.display="none";
+        document.getElementById("dashboard").style.display="block";
+        logAction("Admin Login");
+    } else {
+        alert("Falsches Passwort");
+    }
+}
+
+function addNews(){
+    const text = document.getElementById("newsText").value;
+    const today = new Date().toLocaleDateString("de-DE");
+
+    const existing = JSON.parse(localStorage.getItem("prcNews")) || [];
+    existing.unshift({text:text, date:today});
+    localStorage.setItem("prcNews", JSON.stringify(existing));
+
+    logAction("News gepostet: " + text);
+    alert("News hinzugefügt!");
+}
+
+function toggleMaintenance(){
+    const current = localStorage.getItem("maintenanceMode");
+    if(current === "on"){
+        localStorage.setItem("maintenanceMode","off");
+        logAction("Wartungsmodus AUS");
+        alert("Website ONLINE");
+    } else {
+        localStorage.setItem("maintenanceMode","on");
+        logAction("Wartungsmodus EIN");
+        alert("Website in Wartung");
+    }
+}
+
+function logAction(action){
+    const logs = JSON.parse(localStorage.getItem("adminLogs")) || [];
+    logs.unshift(new Date().toLocaleString("de-DE") + " → " + action);
+    localStorage.setItem("adminLogs", JSON.stringify(logs));
+}
+
+function showLogs(){
+    const logs = JSON.parse(localStorage.getItem("adminLogs")) || [];
+    alert(logs.join("\n"));
+}
+
+function clearAll(){
+    if(confirm("Wirklich alles löschen?")){
+        localStorage.clear();
+        alert("Alles gelöscht");
+    }
+}
+</script>
+
+</body>
+</html>

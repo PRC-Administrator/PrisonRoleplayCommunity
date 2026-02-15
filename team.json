@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Justin",
+    "role": "Owner",
+    "discord": "justin#0001",
+    "image": "https://via.placeholder.com/120"
+  },
+  {
+    "name": "Max",
+    "role": "Admin",
+    "discord": "max#1234",
+    "image": "https://via.placeholder.com/120"
+  }
+]

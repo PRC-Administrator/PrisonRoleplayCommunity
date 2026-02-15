@@ -143,6 +143,27 @@ nav a:hover {
 
     </style>
 </head>
+    <script>
+function addNews(text, type="UPDATE") {
+    const container = document.getElementById("newsContainer");
+    const today = new Date().toLocaleDateString("de-DE");
+
+    const news = document.createElement("div");
+    news.className = "news-item";
+
+    news.innerHTML = `
+        <span class="badge">${type}</span>
+        <p><strong>${today}</strong> – ${text}</p>
+    `;
+
+    container.prepend(news);
+}
+
+// HIER kannst du neue Updates hinzufügen:
+addNews("Website ist offiziell online!", "NEU");
+addNews("Neon Design verbessert 🔥");
+</script>
+
 <body>
     <nav>
     <a href="index.html">Start</a>
@@ -183,18 +204,10 @@ Oder an den Discord Support @officalprcsupport Weden.
     
 <div class="box">
     <h2>📰 News & Updates</h2>
-
-    <div class="news-item">
-        <span class="badge">NEU</span>
-        <p><strong>15.02.2026</strong> – Website ist offiziell online! 🚀</p>
-    </div>
-
-    <div class="news-item">
-        <span class="badge">UPDATE</span>
-        <p><strong>14.02.2026</strong> – Neon Design + Sirenen Effekt hinzugefügt 🔥</p>
-    </div>
-
+    <div id="newsContainer"></div>
 </div>
+
+
 
 
 

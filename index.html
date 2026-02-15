@@ -168,7 +168,7 @@ nav a:hover {
     </style>
 </head>
 <script>
-const ADMIN_PASSWORD = "PRC2026"; // Dein Passwort
+const ADMIN_PASSWORD = "PRC-Administrator2026"; // Dein Passwort
 let adminUnlocked = false;
 
 // Gespeicherte News laden
@@ -177,7 +177,7 @@ window.onload = function() {
     savedNews.forEach(news => createNewsElement(news.text, news.date));
 };
 
-// 🔐 ALT + LEERTASTE = Admin Login
+// 🔐 STRG + Shift + ALT + A = Admin Login
     document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.shiftKey && event.altKey && event.code === "KeyA") {
         const pass = prompt("Admin Passwort eingeben:");
@@ -299,6 +299,7 @@ Oder an den Discord Support @officalprcsupport Weden.
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 

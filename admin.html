@@ -8,70 +8,79 @@
 body{
     margin:0;
     font-family:Arial, sans-serif;
-    background: linear-gradient(270deg, #0f0f0f, #001f3f, #0f0f0f);
-    background-size:600% 600%;
-    animation: neonBG 15s ease infinite;
-    color:white;
+    background:#0a0f0a;
+    color:#00ff88;
     text-align:center;
 }
 
-@keyframes neonBG{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+/* Neon Glow */
+.glow{
+    text-shadow:0 0 15px #00ff88;
 }
 
-.panel{
-    margin:40px auto;
-    padding:30px;
+/* Container */
+.container{
+    margin:60px auto;
+    padding:40px;
     width:90%;
-    max-width:600px;
+    max-width:700px;
     background:#111;
-    border:2px solid #00ffff;
+    border:2px solid #00ff88;
     border-radius:15px;
-    box-shadow:0 0 25px #00ffff;
+    box-shadow:0 0 30px #00ff88;
 }
 
+/* Inputs */
 input{
-    padding:10px;
+    padding:12px;
     margin:10px;
-    width:80%;
-    border-radius:8px;
+    width:70%;
     border:none;
+    border-radius:8px;
+    background:#1a1a1a;
+    color:#00ff88;
+    outline:none;
 }
 
+/* Buttons */
 button{
-    padding:10px 20px;
+    padding:12px 25px;
     margin:10px;
     border:none;
     border-radius:8px;
     cursor:pointer;
     font-weight:bold;
+    background:#00ff88;
+    color:black;
+    box-shadow:0 0 15px #00ff88;
+    transition:0.2s;
 }
 
-.startBtn{
-    background:green;
-    color:white;
+button:hover{
+    transform:scale(1.05);
 }
 
-.stopBtn{
-    background:red;
-    color:white;
+/* Sections */
+.section{
+    margin-top:40px;
+    padding-top:20px;
+    border-top:1px solid #00ff88;
+}
+
+/* Log */
+#logBox{
+    margin-top:20px;
+    max-height:150px;
+    overflow-y:auto;
+    background:#0f0f0f;
+    padding:15px;
+    border-radius:10px;
+    font-size:14px;
+    text-align:left;
 }
 
 #dashboard{
     display:none;
-}
-
-#logBox{
-    margin-top:20px;
-    text-align:left;
-    max-height:150px;
-    overflow-y:auto;
-    background:#1a1a1a;
-    padding:10px;
-    border-radius:10px;
-    font-size:14px;
 }
 </style>
 </head>
@@ -79,44 +88,40 @@ button{
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="panel">
-    <h2>🔐 Admin Login</h2>
+<div id="login" class="container">
+    <h1 class="glow">🔐 PRC Admin Login</h1>
     <input type="password" id="password" placeholder="Passwort"><br>
     <input type="text" id="code" placeholder="2FA Code"><br>
-    <button onclick="login()">Login</button>
+    <button onclick="login()">Einloggen</button>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" class="panel">
-    <h2>🎛 PRC Admin Dashboard</h2>
+<div id="dashboard" class="container">
+    <h1 class="glow">🟢 PRC Control Panel</h1>
 
-    <h3>🚧 Wartungsmodus</h3>
+    <!-- Wartung -->
+    <div class="section">
+        <h2>🚧 Wartungsmodus</h2>
+        <input type="number" id="durationInput" placeholder="Minuten eingeben">
+        <br>
+        <button onclick="startMaintenance()">Wartung starten</button>
+        <button onclick="stopMaintenance()">Wartung beenden</button>
 
-    <input type="number" id="durationInput" placeholder="Minuten (z.B. 30)">
-    <br>
+        <p id="liveCountdown">Kein aktiver Wartungsmodus</p>
+    </div>
 
-    <button class="startBtn" onclick="startMaintenance()">
-        Wartung starten
-    </button>
-
-    <button class="stopBtn" onclick="stopMaintenance()">
-        Wartung beenden
-    </button>
-
-    <h3>⏳ Laufender Countdown</h3>
-    <div id="liveCountdown">Kein aktiver Wartungsmodus</div>
-
-    <h3>📜 Admin Log</h3>
-    <div id="logBox"></div>
+    <!-- Log -->
+    <div class="section">
+        <h2>📜 System Log</h2>
+        <div id="logBox"></div>
+    </div>
 </div>
 
 <script>
 const ADMIN_PASSWORD = "PRC2026";
 const ADMIN_CODE = "8842";
 
-/* ======================
-   LOGIN
-====================== */
+/* LOGIN */
 function login(){
     const pass = document.getElementById("password").value;
     const code = document.getElementById("code").value;
@@ -125,27 +130,24 @@ function login(){
         sessionStorage.setItem("adminAccess","true");
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
-        logAction("Admin Login erfolgreich");
-        checkActiveMaintenance();
+        log("Admin eingeloggt");
+        checkMaintenance();
     } else {
-        alert("Falsche Daten");
+        alert("Falsche Zugangsdaten");
     }
 }
 
-/* Auto Login wenn Tab noch offen */
+/* Auto Login */
 window.onload = function(){
     if(sessionStorage.getItem("adminAccess")==="true"){
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
-        checkActiveMaintenance();
+        checkMaintenance();
     }
 }
 
-/* ======================
-   WARTUNG STARTEN
-====================== */
+/* START WARTUNG */
 function startMaintenance(){
-
     const minutes = document.getElementById("durationInput").value;
 
     if(!minutes || minutes <= 0){
@@ -157,49 +159,44 @@ function startMaintenance(){
     localStorage.setItem("maintenanceDuration", minutes);
     localStorage.setItem("maintenanceStart", Date.now());
 
-    logAction("Wartung gestartet für " + minutes + " Minuten");
-    checkActiveMaintenance();
+    log("Wartung gestartet für " + minutes + " Minuten");
+    checkMaintenance();
 }
 
-/* ======================
-   WARTUNG STOPPEN
-====================== */
+/* STOP WARTUNG */
 function stopMaintenance(){
     localStorage.setItem("maintenanceMode","off");
     localStorage.removeItem("maintenanceStart");
-    logAction("Wartung manuell beendet");
+    log("Wartung manuell beendet");
     document.getElementById("liveCountdown").innerText =
         "Kein aktiver Wartungsmodus";
 }
 
-/* ======================
-   LIVE COUNTDOWN
-====================== */
-function checkActiveMaintenance(){
-
+/* LIVE COUNTDOWN */
+function checkMaintenance(){
     if(localStorage.getItem("maintenanceMode")==="on"){
 
-        let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60 * 1000;
-        let startTime = parseInt(localStorage.getItem("maintenanceStart"));
-        const endTime = startTime + duration;
+        let duration = parseInt(localStorage.getItem("maintenanceDuration")) * 60000;
+        let start = parseInt(localStorage.getItem("maintenanceStart"));
+        let end = start + duration;
 
         function update(){
-            const remaining = endTime - Date.now();
+            let remaining = end - Date.now();
 
             if(remaining <= 0){
                 localStorage.setItem("maintenanceMode","off");
                 localStorage.removeItem("maintenanceStart");
                 document.getElementById("liveCountdown").innerText =
                     "Wartung beendet";
-                logAction("Wartung automatisch beendet");
+                log("Wartung automatisch beendet");
                 return;
             }
 
-            const minutes = Math.floor((remaining/1000/60)%60);
-            const seconds = Math.floor((remaining/1000)%60);
+            let min = Math.floor((remaining/1000/60)%60);
+            let sec = Math.floor((remaining/1000)%60);
 
             document.getElementById("liveCountdown").innerText =
-                minutes + "m " + seconds + "s verbleibend";
+                "Verbleibend: " + min + "m " + sec + "s";
 
             requestAnimationFrame(update);
         }
@@ -208,14 +205,12 @@ function checkActiveMaintenance(){
     }
 }
 
-/* ======================
-   LOG SYSTEM
-====================== */
-function logAction(text){
+/* LOG SYSTEM */
+function log(text){
     const time = new Date().toLocaleTimeString();
-    const logBox = document.getElementById("logBox");
-    logBox.innerHTML += "[" + time + "] " + text + "<br>";
-    logBox.scrollTop = logBox.scrollHeight;
+    const box = document.getElementById("logBox");
+    box.innerHTML += "[" + time + "] " + text + "<br>";
+    box.scrollTop = box.scrollHeight;
 }
 </script>
 

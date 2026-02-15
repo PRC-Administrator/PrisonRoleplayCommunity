@@ -1,143 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>PRC Admin Panel</title>
-
-<style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#0a0f0a;
-    color:#00ff88;
-    text-align:center;
-}
-
-/* Neon Glow */
-.glow{
-    text-shadow:0 0 15px #00ff88;
-}
-
-/* Container */
-.container{
-    margin:60px auto;
-    padding:40px;
-    width:90%;
-    max-width:700px;
-    background:#111;
-    border:2px solid #00ff88;
-    border-radius:15px;
-    box-shadow:0 0 30px #00ff88;
-}
-
-/* Inputs */
-input{
-    padding:12px;
-    margin:10px;
-    width:70%;
-    border:none;
-    border-radius:8px;
-    background:#1a1a1a;
-    color:#00ff88;
-    outline:none;
-}
-
-/* Buttons */
-button{
-    padding:12px 25px;
-    margin:10px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-    background:#00ff88;
-    color:black;
-    box-shadow:0 0 15px #00ff88;
-    transition:0.2s;
-}
-
-button:hover{
-    transform:scale(1.05);
-}
-
-/* Sections */
-.section{
-    margin-top:40px;
-    padding-top:20px;
-    border-top:1px solid #00ff88;
-}
-
-/* Log */
-#logBox{
-    margin-top:20px;
-    max-height:150px;
-    overflow-y:auto;
-    background:#0f0f0f;
-    padding:15px;
-    border-radius:10px;
-    font-size:14px;
-    text-align:left;
-}
-
-#dashboard{
-    display:none;
-}
-</style>
-</head>
-
-<body>
-
-<!-- LOGIN -->
-<div id="login" class="container">
-    <h1 class="glow">🔐 PRC Admin Login</h1>
-    <input type="password" id="password" placeholder="Passwort"><br>
-    <input type="text" id="code" placeholder="2FA Code"><br>
-    <button onclick="login()">Einloggen</button>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="container">
-    <h1 class="glow">🟢 PRC Control Panel</h1>
-
-    <!-- Wartung -->
-    <div class="section">
-        <h2>🚧 Wartungsmodus</h2>
-        <input type="number" id="durationInput" placeholder="Minuten eingeben">
-        <br>
-        <button onclick="startMaintenance()">Wartung starten</button>
-        <button onclick="stopMaintenance()">Wartung beenden</button>
-
-        <p id="liveCountdown">Kein aktiver Wartungsmodus</p>
-    </div>
-<div class="section">
-    <h2>📰 Update veröffentlichen</h2>
-
-    <input type="text" id="updateTitle" placeholder="Titel">
-    <br>
-
-    <textarea id="updateText" placeholder="Update Text"
-        style="width:70%;height:100px;background:#1a1a1a;color:#00ff88;border:none;border-radius:8px;padding:10px;"></textarea>
-    <br>
-
-    <label style="color:#00ff88;">
-        <input type="checkbox" id="importantUpdate">
-        📌 Als WICHTIG markieren
-    </label>
-    <br>
-
-    <button onclick="addUpdate()">Update posten</button>
-
-    <div id="updateList" style="margin-top:20px;"></div>
-</div>
-
-
-    <!-- Log -->
-    <div class="section">
-        <h2>📜 System Log</h2>
-        <div id="logBox"></div>
-    </div>
-</div>
-
 <script>
 const ADMIN_PASSWORD = "PRC-Administrator2026";
 const ADMIN_CODE = "8842";
@@ -153,6 +13,7 @@ function login(){
         document.getElementById("dashboard").style.display="block";
         log("Admin eingeloggt");
         checkMaintenance();
+        loadAdminUpdates();
     } else {
         alert("Falsche Zugangsdaten");
     }
@@ -164,10 +25,11 @@ window.onload = function(){
         document.getElementById("login").style.display="none";
         document.getElementById("dashboard").style.display="block";
         checkMaintenance();
+        loadAdminUpdates();
     }
 }
 
-/* START WARTUNG */
+/* WARTUNG START */
 function startMaintenance(){
     const minutes = document.getElementById("durationInput").value;
 
@@ -184,16 +46,16 @@ function startMaintenance(){
     checkMaintenance();
 }
 
-/* STOP WARTUNG */
+/* WARTUNG STOP */
 function stopMaintenance(){
     localStorage.setItem("maintenanceMode","off");
     localStorage.removeItem("maintenanceStart");
-    log("Wartung manuell beendet");
     document.getElementById("liveCountdown").innerText =
         "Kein aktiver Wartungsmodus";
+    log("Wartung manuell beendet");
 }
 
-/* LIVE COUNTDOWN */
+/* COUNTDOWN */
 function checkMaintenance(){
     if(localStorage.getItem("maintenanceMode")==="on"){
 
@@ -225,7 +87,10 @@ function checkMaintenance(){
         update();
     }
 }
+
+/* UPDATE POSTEN */
 function addUpdate(){
+
     const title = document.getElementById("updateTitle").value;
     const text = document.getElementById("updateText").value;
     const important = document.getElementById("importantUpdate").checked;
@@ -254,18 +119,70 @@ function addUpdate(){
     loadAdminUpdates();
 }
 
-/* Beim Laden anzeigen */
-window.addEventListener("load", loadAdminUpdates);
+/* UPDATES IM ADMIN ANZEIGEN */
+function loadAdminUpdates(){
+
+    const list = document.getElementById("updateList");
+    list.innerHTML="";
+
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+
+    if(updates.length === 0){
+        list.innerHTML = "<p>Keine Updates vorhanden.</p>";
+        return;
+    }
+
+    updates.forEach((u,index)=>{
+        list.innerHTML += `
+            <div style="
+                background:#0f0f0f;
+                padding:15px;
+                margin:15px 0;
+                border-radius:10px;
+                border:2px solid #00ff88;
+                box-shadow:0 0 10px #00ff88;
+            ">
+                ${u.important ? "<strong style='color:red;'>📌 WICHTIG</strong><br>" : ""}
+                <strong>${u.title}</strong><br>
+                <small>${u.date}</small>
+                <p>${u.text}</p>
+
+                <button onclick="deleteUpdate(${index})"
+                    style="
+                        background:red;
+                        color:white;
+                        padding:8px 15px;
+                        border-radius:6px;
+                        cursor:pointer;
+                        box-shadow:0 0 10px red;
+                    ">
+                    🗑 Löschen
+                </button>
+            </div>
+        `;
+    });
+}
+
+/* UPDATE LÖSCHEN */
+function deleteUpdate(index){
+
+    let updates = JSON.parse(localStorage.getItem("updates")) || [];
+
+    updates.splice(index,1);
+
+    localStorage.setItem("updates", JSON.stringify(updates));
+
+    log("Update gelöscht");
+    loadAdminUpdates();
+}
 
 /* LOG SYSTEM */
 function log(text){
+
     const time = new Date().toLocaleTimeString();
     const box = document.getElementById("logBox");
+
     box.innerHTML += "[" + time + "] " + text + "<br>";
     box.scrollTop = box.scrollHeight;
 }
- 
 </script>
-
-</body>
-</html>

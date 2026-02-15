@@ -168,6 +168,20 @@ nav a:hover {
     </style>
 </head>
 <script>
+const ADMIN_PASSWORD = "PRC-Director2026"; // HIER dein Passwort ändern
+
+function checkPassword() {
+    const entered = document.getElementById("adminPassword").value;
+
+    if (entered === ADMIN_PASSWORD) {
+        document.getElementById("newsInput").disabled = false;
+        document.getElementById("postBtn").disabled = false;
+        alert("Admin freigeschaltet ✅");
+    } else {
+        alert("Falsches Passwort ❌");
+    }
+}
+
 function addNews(text) {
     const container = document.getElementById("newsContainer");
     const today = new Date().toLocaleDateString("de-DE");
@@ -232,14 +246,16 @@ Oder an den Discord Support @officalprcsupport Weden.
     
 <div class="box">
     <h2>📰 News & Updates</h2>
-
-    <div class="admin-panel">
-        <input type="text" id="newsInput" placeholder="Update eingeben...">
-        <button onclick="addNewsFromInput()">Posten</button>
-    </div>
+<div class="admin-panel">
+    <input type="password" id="adminPassword" placeholder="Admin Passwort">
+    <input type="text" id="newsInput" placeholder="Update eingeben..." disabled>
+    <button onclick="checkPassword()">Freischalten</button>
+    <button onclick="addNewsFromInput()" id="postBtn" disabled>Posten</button>
+</div>
 
     <div id="newsContainer"></div>
 </div>
+
 
 
 
